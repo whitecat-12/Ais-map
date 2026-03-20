@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Kapal Indonesia - Realtime</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #map { height: 75vh; width: 100%; background: #1a1a1a; }
+        #info-panel { 
+            height: 25vh; 
+            padding: 15px; 
+            overflow-y: auto; 
+            background: #1e293b; 
+            border-top: 3px solid #334155;
+            box-sizing: border-box;
+        }
+        .status-tag { 
+            position: absolute; top: 15px; right: 15px; z-index: 1000; 
+            padding: 8px 16px; border-radius: 8px; 
+            background: rgba(15, 23, 42, 0.9); 
+            border: 1px solid #334155;
+            font-weight: bold;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .log-entry { 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            border-bottom: 1px solid #334155; 
+            padding: 4px 0;
+            color: #94a3b8;
+        }
+        .ship-name { color: #38bdf8; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="status-tag" id="status">⏳ Menghubungkan ke Satelit...</div>
+    <div id="map"></div>
+    <div id="info-panel">
+        <strong style="color: #f8fafc; display: block; margin-bottom: 10px; border-bottom: 1px solid #475569;">🛰️ Log Aktivitas AIS Indonesia</strong>
+        <div id="log-content">Menunggu transmisi data...</div>
+    </div>
+
+    <script>
+        // Menggunakan API Key yang kamu berikan
+        const API_KEY = "460b2729299f645e2c7d192d42117ec8d9eeb9fd";
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('log-content');
+
+        // 1. Setup Peta (Default ke wilayah Nusantara)
+        const map = L.map('map').setView([-2.5489, 118.0149], 5);
+        
+        // Peta Dark Mode dari CartoDB
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const shipMarkers = {};
+
+        // 2. Koneksi WebSocket ke AISStream
+        const socket = new WebSocket("wss://api.aisstream.io/v0/stream");
+
+        socket.onopen = function() {
+            statusEl.innerText = "🟢 System Online - Monitoring RI";
+            statusEl.style.color = "#4ade80";
+
+            const subscription = {
+                APIKey: API_KEY,
+                BoundingBoxes: [[[-11.0, 94.0], [6.0, 141.0]]], // Koordinat Area Indonesia
+                FiltersShipType: [] 
+            };
+            socket.send(JSON.stringify(subscription));
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const mmsi = data.MetaData.MMSI;
+            const shipName = data.MetaData.ShipName.trim() || `Unknown (${mmsi})`;
+            const lat = data.MetaData.Latitude;
+            const lon = data.MetaData.Longitude;
+            
+            // Mengambil kecepatan (SOG) jika tersedia
+            const speed = data.Message.PositionReport?.Sog || 0;
+
+            // Tentukan warna berdasarkan status (Hijau jika jalan, Merah jika diam)
+            const markerColor = speed > 0.5 ? "#22c55e" : "#ef4444";
+
+            if (shipMarkers[mmsi]) {
+                // Update posisi jika kapal sudah ada di peta
+                shipMarkers[mmsi].setLatLng([lat, lon]);
+                shipMarkers[mmsi].setStyle({ fillColor: markerColor });
+            } else {
+                // Buat marker baru jika kapal baru terdeteksi
+                shipMarkers[mmsi] = L.circleMarker([lat, lon], {
+                    radius: 6,
+                    fillColor: markerColor,
+                    color: "#fff",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map);
+            }
+
+            // Info ketika marker diklik
+            shipMarkers[mmsi].bindPopup(`
+                <div style="color: #1e293b">
+                    <b>${shipName}</b><br>
+                    MMSI: ${mmsi}<br>
+                    Speed: ${speed} knots<br>
+                    Pos: ${lat.toFixed(4)}, ${lon.toFixed(4)}
+                </div>
+            `);
+
+            // Update panel log di bawah peta
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `[${time}] Terdeteksi <span class="ship-name">${shipName}</span> - Laju: ${speed} kn`;
+            
+            logEl.prepend(entry);
+            
+            // Batasi log agar tidak memberatkan browser
+            if(logEl.childNodes.length > 30) logEl.removeChild(logEl.lastChild);
+        };
+
+        socket.onclose = function() {
+            statusEl.innerText = "🔴 Koneksi Terputus";
+            statusEl.style.color = "#f87171";
+        };
+
+        socket.onerror = function(err) {
+            console.error("Kesalahan koneksi:", err);
+            statusEl.innerText = "⚠️ Error pada API/Koneksi";
+        };
+    </script>
+</body>
+</html>
