@@ -1,78 +1,84 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Radar Kapal Indonesia - Fix Version</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>AIS Maritime Tracker</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
     <style>
-        body { margin: 0; background: #0f172a; color: white; font-family: sans-serif; }
-        #map { height: 100vh; width: 100%; }
-        #status { 
-            position: absolute; top: 10px; left: 50px; z-index: 1000; 
-            background: rgba(0,0,0,0.8); padding: 10px; border-radius: 5px;
-            font-size: 12px; border: 1px solid #444;
+        #map {
+            height: 100vh;
         }
     </style>
 </head>
 <body>
 
-    <div id="status">Status: Memulai...</div>
-    <div id="map"></div>
+<div id="map"></div>
 
-    <script>
-        const API_KEY = "460b2729299f645e2c7d192d42117ec8d9eeb9fd";
-        const statusEl = document.getElementById('status');
-        
-        const map = L.map('map').setView([1.35, 103.8], 9);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-        const markers = {};
+<script>
+    // ✅ API KEY (SUDAH BENAR)
+    const API_KEY = "460b2729299f645e2c7d192d42117ec8d9eeb9fd";
 
-        function connect() {
-            // Pastikan tidak ada socket yang nyangkut
-            statusEl.innerText = "Status: Menghubungkan...";
-            const socket = new WebSocket("wss://api.aisstream.io/v0/stream");
+    // ✅ INIT MAP (langsung ke area ramai biar kelihatan hasilnya)
+    const map = L.map('map').setView([1.2, 103.8], 8); // Singapura
 
-            socket.onopen = () => {
-                statusEl.innerText = "Status: Terhubung! Menunggu data...";
-                statusEl.style.color = "#4ade80";
-                
-                socket.send(JSON.stringify({
-                    APIKey: API_KEY,
-                    BoundingBoxes: [[[1.0, 103.0], [1.5, 104.5]]], // Area diperkecil biar ringan
-                }));
-            };
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-            socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (!data.MetaData) return;
+    const ships = {};
 
-                const { MMSI, ShipName, Latitude, Longitude } = data.MetaData;
-                const pos = [Latitude, Longitude];
+    // ✅ CONNECT WEBSOCKET
+    const socket = new WebSocket("wss://stream.aisstream.io/v0/stream");
 
-                if (markers[MMSI]) {
-                    markers[MMSI].setLatLng(pos);
-                } else {
-                    markers[MMSI] = L.circleMarker(pos, { radius: 5, color: '#00ffcc' }).addTo(map);
-                    markers[MMSI].bindPopup(ShipName || `MMSI: ${MMSI}`);
-                }
-            };
+    socket.onopen = () => {
+        console.log("✅ Connected to AISStream");
 
-            socket.onclose = () => {
-                statusEl.innerText = "Status: Terputus. Mencoba lagi dalam 10 detik...";
-                statusEl.style.color = "#f87171";
-                // JANGAN langsung reconnect, tunggu 10 detik biar server tenang
-                setTimeout(connect, 10000);
-            };
+        // ✅ FIX: tidak ada const di dalam object
+        socket.send(JSON.stringify({
+            APIKey: API_KEY,
+            BoundingBoxes: [[[ 1.0, 103.5 ], [ 1.5, 104.0 ]]] // area padat kapal
+        }));
+    };
 
-            socket.onerror = (err) => {
-                statusEl.innerText = "Status: Connection Error. Cek API Key atau tunggu 5 menit.";
-                socket.close();
-            };
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.Message && data.Message.PositionReport) {
+            const report = data.Message.PositionReport;
+            const meta = data.MetaData;
+
+            const lat = report.Latitude;
+            const lon = report.Longitude;
+            const mmsi = meta.MMSI;
+
+            // update atau buat marker
+            if (ships[mmsi]) {
+                ships[mmsi].setLatLng([lat, lon]);
+            } else {
+                const marker = L.marker([lat, lon])
+                    .addTo(map)
+                    .bindPopup(`🚢 MMSI: ${mmsi}`);
+
+                ships[mmsi] = marker;
+            }
         }
+    };
 
-        connect();
-    </script>
+    socket.onerror = (err) => {
+        console.error("❌ Error:", err);
+    };
+
+    socket.onclose = () => {
+        console.log("🔌 Disconnected");
+    };
+</script>
+
 </body>
 </html>
