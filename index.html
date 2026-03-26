@@ -1,817 +1,129 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html> 
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AIS Navigation System - Fokus Kapal & Rute Pelayaran</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+  <title>AIS Tracking CSV</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            background: #0a1a2a;
-        }
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-        #map {
-            height: 100vh;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ============ NAVIGATION BAR MODERN ============ */
-        .navbar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1002;
-            background: linear-gradient(135deg, rgba(15, 25, 35, 0.98) 0%, rgba(10, 18, 25, 0.98) 100%);
-            backdrop-filter: blur(16px);
-            color: white;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        /* Logo Section */
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-        }
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 4px 12px rgba(52,152,219,0.3);
-        }
-
-        .logo-text h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            line-height: 1.2;
-            background: linear-gradient(135deg, #fff, #3498db);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .logo-text p {
-            font-size: 0.6rem;
-            opacity: 0.7;
-            margin-top: 2px;
-        }
-
-        /* Stats Badge */
-        .stats-badge {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: rgba(0,0,0,0.4);
-            padding: 6px 18px;
-            border-radius: 40px;
-            backdrop-filter: blur(8px);
-        }
-
-        .stats-badge span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .stats-badge i {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        /* Navigation Menu */
-        .nav-menu {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-
-        .nav-btn i {
-            font-size: 0.85rem;
-        }
-
-        .nav-btn:hover {
-            background: #3498db;
-            border-color: #3498db;
-            transform: translateY(-2px);
-        }
-
-        .nav-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Mobile Menu Toggle */
-        .menu-toggle {
-            display: none;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            font-size: 24px;
-            padding: 8px 12px;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
-        /* ============ SIDE PANEL ============ */
-        .side-panel {
-            position: absolute;
-            top: 85px;
-            right: 20px;
-            z-index: 1000;
-            width: 320px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(16px);
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .panel-header {
-            background: linear-gradient(135deg, #2c3e50, #1a2a3a);
-            color: white;
-            padding: 14px 18px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .panel-header h3 {
-            font-size: 0.9rem;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .panel-header i {
-            font-size: 1rem;
-        }
-
-        .panel-content {
-            padding: 16px;
-            max-height: 55vh;
-            overflow-y: auto;
-        }
-
-        .quick-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px;
-            border-radius: 16px;
-            text-align: center;
-        }
-
-        .stat-card i {
-            font-size: 22px;
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .stat-card .number {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .stat-card .label {
-            font-size: 10px;
-            opacity: 0.9;
-        }
-
-        .traffic-status h4 {
-            color: #2c3e50;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-            border-left: 3px solid #3498db;
-            padding-left: 10px;
-        }
-
-        .congestion-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            margin: 5px 0;
-            background: #f8f9fa;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .congestion-item:hover {
-            background: #e9ecef;
-            transform: translateX(-3px);
-        }
-
-        .congestion-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 30px;
-            font-size: 9px;
-            font-weight: bold;
-            min-width: 65px;
-            text-align: center;
-        }
-
-        .congestion-high { background: #ff4444; color: white; }
-        .congestion-medium { background: #ffaa44; color: white; }
-        .congestion-low { background: #44ff44; color: black; }
-
-        .route-name {
-            font-size: 11px;
-            font-weight: 500;
-            flex: 1;
-            margin-left: 10px;
-        }
-
-        .ship-count {
-            font-size: 10px;
-            color: #666;
-        }
-
-        /* ============ SHIP INFO PANEL ============ */
-        .ship-info-panel {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.88);
-            backdrop-filter: blur(16px);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 11px;
-            min-width: 260px;
-            max-width: 340px;
-            border-left: 4px solid #3498db;
-            pointer-events: none;
-            font-family: monospace;
-        }
-
-        .ship-info-panel i {
-            margin-right: 8px;
-            color: #3498db;
-        }
-
-        /* ============ LEGEND ============ */
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            padding: 12px;
-            border-radius: 16px;
-            font-size: 10px;
-            min-width: 160px;
-        }
-
-        .legend h4 {
-            margin-bottom: 8px;
-            color: #2c3e50;
-            font-size: 11px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin: 6px 0;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .legend-line {
-            width: 20px;
-            height: 3px;
-            margin-right: 8px;
-            border-radius: 2px;
-        }
-
-        .legend-route {
-            width: 20px;
-            height: 3px;
-            background: #ff6600;
-            margin-right: 8px;
-            border-radius: 2px;
-        }
-
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2000;
-            background: rgba(0,0,0,0.92);
-            color: white;
-            padding: 20px 32px;
-            border-radius: 24px;
-            text-align: center;
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .loading i {
-            font-size: 28px;
-            color: #3498db;
-        }
-
-        /* ============ RESPONSIVE DESIGN ============ */
-        @media (max-width: 850px) {
-            .stats-badge { gap: 12px; padding: 4px 12px; }
-            .stats-badge span { font-size: 0.7rem; }
-            .side-panel { width: 280px; top: 75px; right: 12px; }
-            .ship-info-panel { min-width: 220px; font-size: 10px; padding: 10px 14px; }
-        }
-
-        @media (max-width: 700px) {
-            .nav-container { flex-wrap: wrap; padding: 0 16px; }
-            .logo { order: 1; flex: 1; }
-            .stats-badge { order: 2; }
-            .menu-toggle { order: 3; display: block; margin-left: 12px; }
-            .nav-menu { 
-                order: 4; 
-                width: 100%; 
-                display: none; 
-                justify-content: center; 
-                padding: 12px 0 16px; 
-                gap: 8px;
-                border-top: 1px solid rgba(255,255,255,0.1);
-                margin-top: 4px;
-            }
-            .nav-menu.show { display: flex; }
-            .nav-btn { padding: 6px 14px; font-size: 0.75rem; }
-            .side-panel { top: 115px; width: 260px; right: 10px; }
-            .legend { bottom: 10px; right: 10px; min-width: 140px; }
-        }
-
-        @media (max-width: 550px) {
-            .stats-badge { display: none; }
-            .side-panel { width: 240px; top: 110px; }
-            .legend { display: none; }
-            .ship-info-panel { left: 10px; bottom: 10px; min-width: 200px; }
-            .nav-btn { padding: 5px 12px; font-size: 0.7rem; }
-            .nav-btn i { font-size: 0.7rem; }
-        }
-
-        /* Custom Scroll */
-        .panel-content::-webkit-scrollbar { width: 4px; }
-        .panel-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        .panel-content::-webkit-scrollbar-thumb { background: #3498db; border-radius: 10px; }
-    </style>
+  <style>
+    body { margin: 0; font-family: Arial; }
+    #control { padding: 10px; background: #f4f4f4; }
+    #map { height: 90vh; }
+  </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <div class="logo-icon"><i class="fas fa-ship"></i></div>
-                <div class="logo-text">
-                    <h1>AIS NAVIGATION</h1>
-                    <p>500 Kapal | Mode Fokus & Rute</p>
-                </div>
-            </div>
-            <div class="stats-badge" id="statsBadge">
-                <span><i class="fas fa-ship"></i> <span id="shipCount">0</span></span>
-                <span><i class="fas fa-eye"></i> <span id="visibleCount">0</span></span>
-                <span><i class="fas fa-circle-exclamation"></i> <span id="congestedCount">0</span></span>
-            </div>
-            <button class="menu-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
-            <div class="nav-menu" id="navMenu">
-                <button class="nav-btn" onclick="centerMap()"><i class="fas fa-location-dot"></i> Pusatkan</button>
-                <button class="nav-btn" onclick="showAllShips()"><i class="fas fa-ship"></i> Semua</button>
-                <button class="nav-btn" onclick="exitFocusMode()"><i class="fas fa-arrows-spin"></i> Fokus</button>
-                <button class="nav-btn" onclick="toggleAutoSimulate()"><i class="fas fa-play"></i> Simulasi</button>
-                <button class="nav-btn" onclick="clearAllRoutes()"><i class="fas fa-trash"></i> Rute</button>
-            </div>
-        </div>
-    </div>
 
-    <div id="map"></div>
+<div id="control">
+  <input type="file" id="fileInput" accept=".csv">
+  <span>Upload CSV AIS</span>
+</div>
 
-    <div class="side-panel">
-        <div class="panel-header" onclick="togglePanel()">
-            <h3><i class="fas fa-traffic-light"></i> Status Lalu Lintas Laut</h3>
-            <i class="fas fa-chevron-down" id="panelToggleIcon"></i>
-        </div>
-        <div class="panel-content" id="panelContent">
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <i class="fas fa-ship"></i>
-                    <div class="number" id="statTotalShips">0</div>
-                    <div class="label">Total Kapal</div>
-                </div>
-                <div class="stat-card" style="background: linear-gradient(135deg, #ff6600, #cc5500);">
-                    <i class="fas fa-eye"></i>
-                    <div class="number" id="statFocus">0</div>
-                    <div class="label">Mode Fokus</div>
-                </div>
-            </div>
-            <div class="traffic-status">
-                <h4><i class="fas fa-water"></i> Status Per Jalur</h4>
-                <div id="congestionList">Memuat data...</div>
-            </div>
-        </div>
-    </div>
+<div id="map"></div>
 
-    <div class="ship-info-panel" id="shipInfo">
-        <i class="fas fa-info-circle"></i> Klik kapal untuk fokus & lihat rute
-    </div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <div class="legend">
-        <h4><i class="fas fa-list"></i> Legenda</h4>
-        <div class="legend-item"><div class="legend-color" style="background: #ff4444;"></div><span>Cepat &gt;20kt</span></div>
-        <div class="legend-item"><div class="legend-color" style="background: #ffaa44;"></div><span>Sedang 10-20kt</span></div>
-        <div class="legend-item"><div class="legend-color" style="background: #44ff44;"></div><span>Lambat &lt;10kt</span></div>
-        <div class="legend-item"><div class="legend-color" style="background: #4444ff;"></div><span>Berhenti</span></div>
-        <div class="legend-item"><div class="legend-route"></div><span>Rute ke Tujuan</span></div>
-        <div class="legend-item"><div class="legend-color" style="background: #ff6600;"></div><span>Kapal Fokus</span></div>
-    </div>
+<script>
+let map = L.map('map').setView([-2, 118], 5);
 
-    <div class="loading" id="loading">
-        <i class="fas fa-spinner fa-spin"></i>
-        <span>Memuat 500 kapal...</span>
-    </div>
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18
+}).addTo(map);
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // ============ INISIALISASI PETA ============
-        var map = L.map('map').setView([-2.5, 118], 5);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap',
-            maxZoom: 19
-        }).addTo(map);
-        
-        // ============ DATA PELABUHAN ============
-        const ports = {
-            'Tanjung Priok': { lat: -6.0938, lng: 106.8044 },
-            'Tanjung Perak': { lat: -7.2111, lng: 112.7256 },
-            'Belawan': { lat: 3.7833, lng: 98.6833 },
-            'Makassar': { lat: -5.1333, lng: 119.4167 },
-            'Balikpapan': { lat: -1.2633, lng: 116.8289 },
-            'Batam': { lat: 1.0456, lng: 104.0305 },
-            'Singapore': { lat: 1.264, lng: 103.823 },
-            'Cilacap': { lat: -7.7333, lng: 109.0167 },
-            'Bitung': { lat: 1.4476, lng: 125.1891 },
-            'Ambon': { lat: -3.6954, lng: 128.1814 },
-            'Jayapura': { lat: -2.5333, lng: 140.7167 },
-            'Kupang': { lat: -10.1709, lng: 123.6077 }
-        };
-        
-        // ============ DATA JALUR PELAYARAN ============
-        const shippingRoutes = [
-            { name: "Selat Malaka", points: [[5.5, 98], [4.5, 99], [3.5, 100], [2.5, 101]], zone: { latMin: 2, latMax: 6, lngMin: 97, lngMax: 102 } },
-            { name: "Selat Sunda", points: [[-5.5, 105], [-5.8, 105.5], [-6.2, 105.8], [-6.5, 106]], zone: { latMin: -7, latMax: -5, lngMin: 104, lngMax: 107 } },
-            { name: "Laut Jawa", points: [[-5, 112], [-5.5, 113], [-6, 114], [-6.5, 114.5]], zone: { latMin: -7, latMax: -4, lngMin: 111, lngMax: 115 } },
-            { name: "Selat Makassar", points: [[-2, 118], [-3, 117.5], [-4, 117], [-5, 116.5]], zone: { latMin: -6, latMax: -1, lngMin: 116, lngMax: 119 } },
-            { name: "Laut Sulawesi", points: [[3, 122], [2, 121], [1, 120], [0, 119]], zone: { latMin: -1, latMax: 4, lngMin: 118, lngMax: 123 } },
-            { name: "Selat Lombok", points: [[-8, 115.5], [-8.3, 115.8], [-8.5, 116], [-8.7, 116.2]], zone: { latMin: -9, latMax: -7.5, lngMin: 115, lngMax: 117 } },
-            { name: "Laut Banda", points: [[-4, 129], [-4.5, 128.5], [-5, 128], [-5.5, 127.5]], zone: { latMin: -6, latMax: -3, lngMin: 127, lngMax: 130 } }
-        ];
-        
-        // ============ DETEKSI LAUT ============
-        const landAreas = [
-            { minLat: -6.5, maxLat: 6, minLng: 95, maxLng: 106 },
-            { minLat: -8.5, maxLat: -5.5, minLng: 105, maxLng: 115 },
-            { minLat: -5, maxLat: 5, minLng: 108, maxLng: 119 },
-            { minLat: -6, maxLat: 2, minLng: 118, maxLng: 126 },
-            { minLat: -9, maxLat: -1, minLng: 130, maxLng: 141 }
-        ];
-        
-        function isInSea(lat, lng) {
-            for (let land of landAreas) {
-                if (lat >= land.minLat && lat <= land.maxLat && lng >= land.minLng && lng <= land.maxLng) return false;
-            }
-            return lat >= -11 && lat <= 6 && lng >= 95 && lng <= 141;
-        }
-        
-        // ============ GENERATE POSISI ============
-        let usedPositions = new Set();
-        
-        function getRandomPosition(route) {
-            let attempts = 0;
-            let lat, lng, key;
-            do {
-                const zone = route.zone;
-                lat = zone.latMin + Math.random() * (zone.latMax - zone.latMin);
-                lng = zone.lngMin + Math.random() * (zone.lngMax - zone.lngMin);
-                lat += (Math.random() - 0.5) * 0.6;
-                lng += (Math.random() - 0.5) * 0.6;
-                key = `${Math.round(lat * 5)}_${Math.round(lng * 5)}`;
-                attempts++;
-                if (attempts > 30) break;
-            } while (usedPositions.has(key));
-            usedPositions.add(key);
-            return { lat, lng };
-        }
-        
-        // ============ KELAS KAPAL ============
-        let ships = [];
-        let shipMarkers = {};
-        let shipRoutes = {};
-        let focusedShipId = null;
-        let autoSimulate = true;
-        let simulationInterval;
-        
-        const shipNames = ["MERATUS", "SAMUDERA", "NUSANTARA", "BAHARI", "LAUTAN", "GUNUNG", "KRAKATAU", "BROMO", "RINJANI", "KOMODO", "RAJA AMPAT", "BOROBUDUR", "PAPUA", "SUMATRA", "JAWA", "KALIMANTAN", "SULAWESI", "BALI", "FLORES", "MALUKU"];
-        const shipTypes = ["Container Ship", "Oil Tanker", "Bulk Carrier", "Passenger Ferry", "Cargo Ship"];
-        
-        class Ship {
-            constructor(id, name, mmsi, lat, lng, speed, course, type, route) {
-                this.id = id;
-                this.name = name;
-                this.mmsi = mmsi;
-                this.lat = lat;
-                this.lng = lng;
-                this.speed = speed;
-                this.course = course;
-                this.type = type;
-                this.route = route;
-                this.timestamp = new Date();
-                this.destination = Object.keys(ports)[Math.floor(Math.random() * Object.keys(ports).length)];
-                this.cargo = ['Container', 'Crude Oil', 'Coal', 'Palm Oil'][Math.floor(Math.random() * 4)];
-                this.destCoord = ports[this.destination];
-            }
-            
-            updatePosition(lat, lng, speed, course) {
-                this.lat = lat;
-                this.lng = lng;
-                this.speed = speed;
-                this.course = course;
-                this.timestamp = new Date();
-            }
-            
-            getStatus() {
-                if (this.speed > 20) return "Cepat";
-                if (this.speed > 10) return "Normal";
-                if (this.speed > 0.5) return "Lambat";
-                return "Berhenti";
-            }
-            
-            getDistance() {
-                const dx = this.lat - this.destCoord.lat;
-                const dy = this.lng - this.destCoord.lng;
-                return Math.sqrt(dx * dx + dy * dy) * 111;
-            }
-        }
-        
-        // ============ GENERATE 500 KAPAL ============
-        function generateShips() {
-            const totalShips = 500;
-            usedPositions.clear();
-            const perRoute = Math.floor(totalShips / shippingRoutes.length);
-            
-            for (let route of shippingRoutes) {
-                for (let i = 0; i < perRoute; i++) {
-                    const { lat, lng } = getRandomPosition(route);
-                    const type = shipTypes[Math.floor(Math.random() * shipTypes.length)];
-                    let speed = type === "Container Ship" ? 16 + Math.random() * 8 : 
-                                type === "Passenger Ferry" ? 18 + Math.random() * 7 : 8 + Math.random() * 10;
-                    
-                    ships.push(new Ship(
-                        ships.length + 1,
-                        `MV ${shipNames[ships.length % shipNames.length]} ${ships.length + 1}`,
-                        `525${100000 + Math.floor(Math.random() * 900000)}`,
-                        lat, lng, speed, Math.random() * 360, type, route.name
-                    ));
-                }
-            }
-        }
-        
-        // ============ FUNGSI MARKER ============
-        function getMarkerColor(speed) {
-            if (speed > 20) return '#ff4444';
-            if (speed > 10) return '#ffaa44';
-            if (speed > 0.5) return '#44ff44';
-            return '#4444ff';
-        }
-        
-        function createIcon(speed, isFocused = false) {
-            const color = isFocused ? '#ff6600' : getMarkerColor(speed);
-            const size = isFocused ? 34 : 24;
-            return L.divIcon({
-                html: `<div style="background: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); text-align: center; line-height: ${size-4}px; font-size: ${isFocused ? 16 : 12}px; transition: 0.2s;">🚢</div>`,
-                iconSize: [size, size],
-                iconAnchor: [size/2, size/2],
-                popupAnchor: [0, -size/2]
-            });
-        }
-        
-        function createPopup(ship) {
-            return `<div style="min-width: 210px;"><b>${ship.name}</b><br><small>${ship.type}</small><hr><table style="font-size: 10px;">` +
-                `<tr><td>⚡ Speed:</td><td><b>${ship.speed.toFixed(1)} knot</b></td></tr>` +
-                `<tr><td>🎯 Status:</td><td><b>${ship.getStatus()}</b></td></tr>` +
-                `<tr><td>🎪 Tujuan:</td><td><b>${ship.destination}</b></td></tr>` +
-                `<tr><td>📏 Jarak:</td><td><b>${ship.getDistance().toFixed(1)} km</b></td></tr>` +
-                `</table><hr><i class="fas fa-eye"></i> <b>Klik untuk fokus</b></div>`;
-        }
-        
-        function drawRoute(ship) {
-            if (shipRoutes[ship.id]) map.removeLayer(shipRoutes[ship.id]);
-            const line = L.polyline([[ship.lat, ship.lng], [ship.destCoord.lat, ship.destCoord.lng]], {
-                color: '#ff6600', weight: 3, opacity: 0.85, dashArray: '8, 6'
-            }).addTo(map);
-            line.bindPopup(`<b>${ship.name}</b><br>Tujuan: ${ship.destination}<br>Jarak: ${ship.getDistance().toFixed(1)} km`);
-            shipRoutes[ship.id] = line;
-        }
-        
-        function focusOnShip(ship) {
-            ships.forEach(s => {
-                if (s.id !== ship.id && shipMarkers[s.id]) map.removeLayer(shipMarkers[s.id]);
-            });
-            
-            if (shipMarkers[ship.id]) map.removeLayer(shipMarkers[ship.id]);
-            const marker = L.marker([ship.lat, ship.lng], { icon: createIcon(ship.speed, true) })
-                .addTo(map).bindPopup(createPopup(ship)).on('click', () => focusOnShip(ship));
-            shipMarkers[ship.id] = marker;
-            drawRoute(ship);
-            map.setView([ship.lat, ship.lng], 11);
-            focusedShipId = ship.id;
-            
-            document.getElementById('shipInfo').innerHTML = `<i class="fas fa-eye"></i> <strong>FOKUS: ${ship.name}</strong><br>🎪 Tujuan: ${ship.destination}<br>📏 Jarak: ${ship.getDistance().toFixed(1)} km<br><i class="fas fa-route"></i> Rute ditampilkan`;
-            document.getElementById('statFocus').innerText = '1';
-            document.getElementById('visibleCount').innerText = '1';
-        }
-        
-        function showAllShips() {
-            ships.forEach(ship => {
-                if (shipMarkers[ship.id]) map.removeLayer(shipMarkers[ship.id]);
-                const marker = L.marker([ship.lat, ship.lng], { icon: createIcon(ship.speed, false) })
-                    .addTo(map).bindPopup(createPopup(ship)).on('click', () => focusOnShip(ship));
-                shipMarkers[ship.id] = marker;
-            });
-            for (let id in shipRoutes) if (shipRoutes[id]) map.removeLayer(shipRoutes[id]);
-            shipRoutes = {};
-            focusedShipId = null;
-            document.getElementById('shipInfo').innerHTML = '<i class="fas fa-info-circle"></i> Klik kapal untuk fokus & lihat rute';
-            document.getElementById('statFocus').innerText = '0';
-            document.getElementById('visibleCount').innerText = ships.length;
-        }
-        
-        function exitFocusMode() { showAllShips(); map.setView([-2.5, 118], 5); }
-        
-        function updateTraffic() {
-            const counts = {};
-            shippingRoutes.forEach(r => counts[r.name] = 0);
-            ships.forEach(s => { if (counts[s.route] !== undefined) counts[s.route]++; });
-            let html = '', congested = 0;
-            shippingRoutes.forEach(route => {
-                const c = counts[route.name] || 0;
-                let status = c > 40 ? 'MACET' : c > 25 ? 'PADAT' : 'LANCAR';
-                let cls = c > 40 ? 'congestion-high' : c > 25 ? 'congestion-medium' : 'congestion-low';
-                let icon = c > 40 ? '🔴' : c > 25 ? '🟠' : '🟢';
-                if (c > 25) congested++;
-                html += `<div class="congestion-item" onclick="focusRoute('${route.name}')"><span class="congestion-badge ${cls}">${icon} ${status}</span><span class="route-name">${route.name}</span><span class="ship-count">${c}</span></div>`;
-            });
-            document.getElementById('congestionList').innerHTML = html;
-            document.getElementById('statTotalShips').innerText = ships.length;
-            document.getElementById('statCongested').innerText = congested;
-            document.getElementById('shipCount').innerText = ships.length;
-            document.getElementById('routeCount').innerText = shippingRoutes.length;
-            document.getElementById('congestedCount').innerText = congested;
-        }
-        
-        function updatePositions() {
-            ships.forEach(ship => {
-                if (shipMarkers[ship.id]) {
-                    shipMarkers[ship.id].setLatLng([ship.lat, ship.lng]);
-                    if (shipMarkers[ship.id]._popup) shipMarkers[ship.id]._popup.setContent(createPopup(ship));
-                }
-                if (shipRoutes[ship.id]) shipRoutes[ship.id].setLatLngs([[ship.lat, ship.lng], [ship.destCoord.lat, ship.destCoord.lng]]);
-            });
-            updateTraffic();
-        }
-        
-        function simulate() {
-            if (!autoSimulate) return;
-            ships.forEach(ship => {
-                if (ship.speed <= 0.5) return;
-                const dist = (ship.speed * 1.852 / 3600) * 2;
-                const rad = ship.course * Math.PI / 180;
-                let newLat = ship.lat + (dist / 111) * Math.cos(rad);
-                let newLng = ship.lng + (dist / 111) * Math.sin(rad) / Math.cos(ship.lat * Math.PI / 180);
-                if (!isInSea(newLat, newLng)) {
-                    ship.course = (ship.course + 180) % 360;
-                    newLat = ship.lat; newLng = ship.lng;
-                } else {
-                    newLat = Math.max(-11, Math.min(6, newLat));
-                    newLng = Math.max(95, Math.min(141, newLng));
-                    if (Math.random() < 0.01) ship.course = (ship.course + (Math.random() - 0.5) * 30) % 360;
-                    if (Math.random() < 0.008) ship.speed = Math.max(0.5, Math.min(28, ship.speed + (Math.random() - 0.5) * 1));
-                }
-                ship.updatePosition(newLat, newLng, ship.speed, ship.course);
-            });
-            updatePositions();
-        }
-        
-        function centerMap() { map.setView([-2.5, 118], 5); }
-        function toggleAutoSimulate() {
-            autoSimulate = !autoSimulate;
-            document.getElementById('shipInfo').innerHTML = `<i class="fas fa-${autoSimulate ? 'play' : 'pause'}"></i> Simulasi ${autoSimulate ? 'AKTIF' : 'NONAKTIF'}`;
-        }
-        function clearAllRoutes() {
-            for (let id in shipRoutes) if (shipRoutes[id]) map.removeLayer(shipRoutes[id]);
-            shipRoutes = {};
-            document.getElementById('shipInfo').innerHTML = '<i class="fas fa-check-circle"></i> Semua rute dihapus';
-        }
-        function focusRoute(name) {
-            const route = shippingRoutes.find(r => r.name === name);
-            if (route) map.fitBounds(L.latLngBounds(route.points), { padding: [50, 50] });
-        }
-        
-        let panelOpen = true;
-        function togglePanel() {
-            panelOpen = !panelOpen;
-            document.getElementById('panelContent').style.display = panelOpen ? 'block' : 'none';
-            document.getElementById('panelToggleIcon').className = panelOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
-        }
-        
-        function toggleMobileMenu() {
-            const menu = document.getElementById('navMenu');
-            menu.classList.toggle('show');
-        }
-        
-        window.centerMap = centerMap;
-        window.showAllShips = showAllShips;
-        window.exitFocusMode = exitFocusMode;
-        window.toggleAutoSimulate = toggleAutoSimulate;
-        window.clearAllRoutes = clearAllRoutes;
-        window.focusRoute = focusRoute;
-        window.togglePanel = togglePanel;
-        window.toggleMobileMenu = toggleMobileMenu;
-        
-        function init() {
-            document.getElementById('loading').style.display = 'flex';
-            setTimeout(() => {
-                generateShips();
-                showAllShips();
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('shipInfo').innerHTML = `<i class="fas fa-check-circle"></i> ${ships.length} kapal siap | Klik kapal untuk fokus`;
-            }, 100);
-            simulationInterval = setInterval(simulate, 2500);
-            map.zoomControl.setPosition('topright');
-        }
-        
-        window.addEventListener('load', init);
-    </script>
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    let text = event.target.result;
+
+    let delimiter = text.includes(";") ? ";" : ",";
+
+    let rows = text.split("\n").filter(r => r.trim() !== "");
+    let headers = rows[0].toLowerCase().split(delimiter).map(h => h.trim());
+
+    const latIndex = headers.findIndex(h => h.includes("lat"));
+    const lonIndex = headers.findIndex(h => h.includes("lon"));
+    const mmsiIndex = headers.findIndex(h => h.includes("mmsi"));
+
+    if (latIndex === -1 || lonIndex === -1) {
+      alert("Kolom LAT/LON tidak ditemukan!");
+      return;
+    }
+
+    let data = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      let cols = rows[i].split(delimiter);
+
+      let lat = parseFloat((cols[latIndex] || "").replace(/"/g, ""));
+      let lon = parseFloat((cols[lonIndex] || "").replace(/"/g, ""));
+      let mmsi = cols[mmsiIndex] || "unknown";
+
+      if (!isNaN(lat) && !isNaN(lon)) {
+        data.push({ lat, lon, mmsi, index: i });
+      }
+    }
+
+    if (data.length === 0) {
+      alert("Data tidak terbaca!");
+      return;
+    }
+
+    tampilkanTracking(data);
+  };
+
+  reader.readAsText(file);
+});
+
+function tampilkanTracking(data) {
+  const grouped = {};
+  data.forEach(d => {
+    if (!grouped[d.mmsi]) grouped[d.mmsi] = [];
+    grouped[d.mmsi].push(d);
+  });
+
+  let bounds = [];
+
+  for (let mmsi in grouped) {
+    let kapal = grouped[mmsi];
+
+    // urutkan data
+    kapal.sort((a, b) => a.index - b.index);
+
+    // sampling biar ringan
+    let filtered = kapal.filter((_, i) => i % 5 === 0);
+
+    for (let i = 0; i < filtered.length; i++) {
+      let d = filtered[i];
+
+      // 🔴 titik merah semua
+      L.circleMarker([d.lat, d.lon], {
+        radius: 3,
+        color: "red",
+        fillColor: "red",
+        fillOpacity: 0.6
+      }).addTo(map);
+
+      bounds.push([d.lat, d.lon]);
+    }
+
+    // 🔴 titik terakhir (lebih besar)
+    let last = filtered[filtered.length - 1];
+    L.circleMarker([last.lat, last.lon], {
+      radius: 6,
+      color: "red",
+      fillColor: "red",
+      fillOpacity: 1
+    }).addTo(map).bindPopup("MMSI: " + mmsi);
+  }
+
+  if (bounds.length > 0) {
+    map.fitBounds(bounds);
+  }
+}
+</script>
+
 </body>
 </html>
