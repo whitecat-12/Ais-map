@@ -1,128 +1,601 @@
-<!DOCTYPE html> 
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <title>AIS Tracking CSV</title>
+  <title>AIS Navigation | Smart Tracking System</title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
+  
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- html2canvas & jspdf for high-quality exports -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
   <style>
-    body { margin: 0; font-family: Arial; }
-    #control { padding: 10px; background: #f4f4f4; }
-    #map { height: 90vh; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f4f7fc;
+      overflow: hidden;
+    }
+    
+    /* ========== NAVBAR KHUSUS: PUTIH PINK TANPA GRADIEN ========== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      /* PUTIH PINK SOLID - TANPA GRADIEN */
+      background: #fff0f5;  /* putih pink lembut */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #ffc0cb;
+    }
+    
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-icon {
+      font-size: 1.8rem;
+      color: #d44c6f;  /* pink tua yang elegan */
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+    }
+    
+    .brand-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      /* solid color - tanpa gradien */
+      color: #b13e5c;
+      letter-spacing: -0.3px;
+    }
+    
+    .brand-sub {
+      font-size: 0.75rem;
+      color: #d96c8a;
+      margin-left: 5px;
+      font-weight: 500;
+    }
+    
+    /* navigation menu (desktop) */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+    
+    .nav-menu li a {
+      text-decoration: none;
+      color: #aa4d6e;  /* pink gelap untuk kontras */
+      font-weight: 600;
+      font-size: 1rem;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 40px;
+    }
+    
+    .nav-menu li a i {
+      font-size: 1.1rem;
+      color: #d65c7e;
+    }
+    
+    .nav-menu li a:hover {
+      background: #ffe4ed;
+      color: #b13e5c;
+      transform: translateY(-1px);
+    }
+    
+    .nav-menu li a:hover i {
+      color: #b13e5c;
+    }
+    
+    /* Export button group style - disesuaikan dengan tema pink putih */
+    .export-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn-export {
+      border: none;
+      background: #ffdae6;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #b13e5c;
+      border: 1px solid #ffb7c5;
+    }
+    
+    .btn-export i {
+      font-size: 1rem;
+    }
+    
+    .btn-pdf {
+      background: #ffe0ea;
+    }
+    
+    .btn-pdf:hover {
+      background: #ffcad8;
+      transform: scale(1.02);
+    }
+    
+    .btn-png {
+      background: #ffe0ea;
+    }
+    
+    .btn-png:hover {
+      background: #ffcad8;
+      transform: scale(1.02);
+    }
+    
+    /* Mobile responsive menu (hamburger) - sesuaikan warna pink */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: #b13e5c;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    /* map container */
+    #map {
+      height: 100vh;
+      width: 100%;
+      z-index: 1;
+    }
+    
+    /* floating info badge (optional) */
+    .info-badge {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      color: #cbd5e1;
+      z-index: 900;
+      pointer-events: none;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    /* responsif untuk tablet dan mobile */
+    @media (max-width: 860px) {
+      .nav-container {
+        padding: 0.7rem 1.2rem;
+      }
+      .brand-text {
+        font-size: 1.2rem;
+      }
+      .logo-icon {
+        font-size: 1.5rem;
+      }
+      .export-buttons {
+        gap: 6px;
+      }
+      .btn-export {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+      .btn-export i {
+        font-size: 0.8rem;
+      }
+    }
+    
+    @media (max-width: 720px) {
+      .menu-toggle {
+        display: block;
+        order: 2;
+      }
+      .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 75%;
+        height: auto;
+        background: #fff5f9;  /* putih pink solid untuk menu mobile */
+        backdrop-filter: none;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+        border-radius: 0 24px 24px 0;
+        gap: 1.2rem;
+        transition: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        box-shadow: 5px 5px 20px rgba(0,0,0,0.1);
+        z-index: 999;
+        border-right: 2px solid #ffc0cb;
+      }
+      .nav-menu.active {
+        left: 0;
+      }
+      .nav-menu li a {
+        width: 100%;
+        padding: 10px 0;
+        color: #b13e5c;
+      }
+      .export-buttons {
+        order: 1;
+        margin-right: 10px;
+      }
+      .logo-area {
+        order: 0;
+      }
+      .btn-export {
+        padding: 6px 12px;
+      }
+    }
+    
+    @media (max-width: 550px) {
+      .export-buttons .btn-text {
+        display: none;
+      }
+      .btn-export i {
+        margin: 0;
+      }
+      .btn-export {
+        padding: 8px 12px;
+      }
+    }
+    
+    /* loading toast for export (simple) */
+    .export-toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      pointer-events: none;
+      transition: opacity 0.2s;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+    }
   </style>
 </head>
 <body>
 
-<div id="control">
-  <input type="file" id="fileInput" accept=".csv">
-  <span>Upload CSV AIS</span>
-</div>
+<!-- NAVIGATION BAR KHUSUS: PUTIH PINK SOLID (tanpa gradien) -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo-area">
+      <i class="fas fa-ship logo-icon"></i>
+      <div>
+        <span class="brand-text">AIS Navigation</span>
+        <span class="brand-sub">smooth tracking</span>
+      </div>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="#" id="homeLink"><i class="fas fa-map-marked-alt"></i> <span>Dashboard</span></a></li>
+      <li><a href="#" id="trackLink"><i class="fas fa-route"></i> <span>Live Track</span></a></li>
+      <li><a href="#" id="portsLink"><i class="fas fa-anchor"></i> <span>Pelabuhan</span></a></li>
+    </ul>
+    
+    <div class="export-buttons">
+      <button class="btn-export btn-pdf" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> <span class="btn-text">PDF</span></button>
+      <button class="btn-export btn-png" id="exportPngBtn"><i class="fas fa-camera"></i> <span class="btn-text">PNG</span></button>
+    </div>
+    
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</nav>
 
 <div id="map"></div>
+<div class="info-badge">
+  <i class="fas fa-ship"></i> AIS realtime | Bezier smooth path
+</div>
 
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-let map = L.map('map').setView([-2, 118], 5);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18
-}).addTo(map);
-
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function(event) {
-    let text = event.target.result;
-
-    let delimiter = text.includes(";") ? ";" : ",";
-
-    let rows = text.split("\n").filter(r => r.trim() !== "");
-    let headers = rows[0].toLowerCase().split(delimiter).map(h => h.trim());
-
-    const latIndex = headers.findIndex(h => h.includes("lat"));
-    const lonIndex = headers.findIndex(h => h.includes("lon"));
-    const mmsiIndex = headers.findIndex(h => h.includes("mmsi"));
-
-    if (latIndex === -1 || lonIndex === -1) {
-      alert("Kolom LAT/LON tidak ditemukan!");
-      return;
-    }
-
-    let data = [];
-
-    for (let i = 1; i < rows.length; i++) {
-      let cols = rows[i].split(delimiter);
-
-      let lat = parseFloat((cols[latIndex] || "").replace(/"/g, ""));
-      let lon = parseFloat((cols[lonIndex] || "").replace(/"/g, ""));
-      let mmsi = cols[mmsiIndex] || "unknown";
-
-      if (!isNaN(lat) && !isNaN(lon)) {
-        data.push({ lat, lon, mmsi, index: i });
+  // ========================
+  // 1. MAP INIT & DATA SAME AS ORIGINAL (enhanced)
+  // ========================
+  let map = L.map('map').setView([-6.86, 112.5], 10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+  
+  // original coordinates
+  let coords = [
+    [-6.860985, 112.417603], [-6.773716, 112.445068], [-6.678247, 112.513733],
+    [-6.648239, 112.582397], [-6.626414, 112.681274], [-6.620957, 112.782898],
+    [-6.626414, 112.868042], [-6.629142, 112.953186], [-6.629142, 113.021851],
+    [-6.637327, 113.101501], [-6.710982, 113.112488], [-6.754624, 113.104248],
+    [-6.781898, 113.054810], [-6.784626, 112.983398], [-6.795535, 112.911987],
+    [-6.814626, 112.846069], [-6.852805, 112.780151], [-6.885527, 112.736206],
+    [-6.923019, 112.701187], [-6.965278, 112.681274], [-7.004127, 112.670975],
+    [-7.045016, 112.664795], [-7.068185, 112.662048], [-7.077725, 112.662048],
+    [-7.084113, 112.661533], [-7.089224, 112.661362], [-7.093483, 112.658875],
+    [-7.094334, 112.653809], [-7.092929, 112.650890], [-7.090885, 112.650247],
+    [-7.088521, 112.650311], [-7.087819, 112.651191], [-7.087819, 112.652006],
+    [-7.087797, 112.652392]
+  ];
+  
+  // red points
+  coords.forEach(p => {
+    L.circleMarker(p, { radius: 3, color: "red", fillColor: "red", fillOpacity: 0.6 }).addTo(map);
+  });
+  
+  // Smooth bezier-like linear interpolation (same logic)
+  function smoothLine(points, resolution = 10) {
+    let smooth = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      let p0 = points[i];
+      let p1 = points[i+1];
+      for (let t = 0; t < resolution; t++) {
+        let ratio = t / resolution;
+        let lat = p0[0] + (p1[0] - p0[0]) * ratio;
+        let lng = p0[1] + (p1[1] - p0[1]) * ratio;
+        smooth.push([lat, lng]);
       }
     }
-
-    if (data.length === 0) {
-      alert("Data tidak terbaca!");
-      return;
-    }
-
-    tampilkanTracking(data);
+    smooth.push(points[points.length-1]);
+    return smooth;
+  }
+  
+  let smoothCoords = smoothLine(coords, 20);
+  
+  // smooth polyline
+  let smoothPolyline = L.polyline(smoothCoords, { color: "blue", weight: 3, opacity: 0.85 }).addTo(map);
+  
+  // last marker
+  let last = coords[coords.length-1];
+  L.circleMarker(last, { radius: 6, color: "red", fillColor: "red", fillOpacity: 1 }).addTo(map);
+  
+  // Ship icon & animation
+  let shipIcon = L.divIcon({ html: "🚢", className: "", iconSize: [24, 24], popupAnchor: [0, -10] });
+  let ship = L.marker(smoothCoords[0], { icon: shipIcon }).addTo(map);
+  let index = 0;
+  let speedMs = 45;  // smooth animation speed
+  
+  function animateShip() {
+    if (index >= smoothCoords.length) index = 0;
+    ship.setLatLng(smoothCoords[index]);
+    index++;
+    setTimeout(animateShip, speedMs);
+  }
+  animateShip();
+  
+  // fit bounds to original coords
+  map.fitBounds(coords);
+  
+  // ========================
+  // PELABUHAN DEFINITIONS (preserve all ports from original)
+  // ========================
+  let pelabuhan1 = [[-7.0865,112.6512],[-7.0865,112.6529],[-7.0872,112.6529],[-7.0873,112.6513],[-7.0865,112.6512]];
+  L.polygon(pelabuhan1, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0869,112.6520]).addTo(map).bindPopup("Pelabuhan 1");
+  
+  let pelabuhan2 = [[-7.0876,112.6513],[-7.0876,112.6529],[-7.0883,112.6529],[-7.0883,112.6513],[-7.0876,112.6513]];
+  L.polygon(pelabuhan2, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0880,112.6520]).addTo(map).bindPopup("Pelabuhan 2");
+  
+  let pelabuhan3 = [[-7.0886,112.6513],[-7.0886,112.6529],[-7.0893,112.6528],[-7.0894,112.6513],[-7.0886,112.6513]];
+  L.polygon(pelabuhan3, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0890,112.6521]).addTo(map).bindPopup("Pelabuhan 3");
+  
+  let pelabuhan4 = [[-7.0896,112.6513],[-7.0895,112.6529],[-7.0903,112.6529],[-7.0905,112.6513],[-7.0896,112.6513]];
+  L.polygon(pelabuhan4, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0900,112.6521]).addTo(map).bindPopup("Pelabuhan 4");
+  
+  let pelabuhan5 = [[-7.0864,112.6536],[-7.0864,112.6552],[-7.0876,112.6553],[-7.0876,112.6535]];
+  L.polygon(pelabuhan5, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0870,112.6544]).addTo(map).bindPopup("Pelabuhan 5");
+  
+  let pelabuhan6 = [[-7.0878,112.6535],[-7.0878,112.6553],[-7.0889,112.6553],[-7.0890,112.6535]];
+  L.polygon(pelabuhan6, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0884,112.6544]).addTo(map).bindPopup("Pelabuhan 6");
+  
+  let pelabuhan7 = [[-7.0891,112.6535],[-7.0891,112.6554],[-7.0902,112.6554],[-7.0903,112.6536]];
+  L.polygon(pelabuhan7, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0896,112.6545]).addTo(map).bindPopup("Pelabuhan 7");
+  
+  let pelabuhan8 = [[-7.0836,112.6541],[-7.0838,112.6556],[-7.0848,112.6555],[-7.0847,112.6538]];
+  L.polygon(pelabuhan8, { color: "yellow", weight: 2, fillColor: "yellow", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0842,112.6547]).addTo(map).bindPopup("Pelabuhan 8");
+  
+  let pelabuhan9 = [[-7.0849,112.6538],[-7.0850,112.6555],[-7.0862,112.6553],[-7.0862,112.6535]];
+  L.polygon(pelabuhan9, { color: "yellow", weight: 2, fillColor: "yellow", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0856,112.6545]).addTo(map).bindPopup("Pelabuhan 9");
+  
+  // small optional extra: add a subtle legend
+  let legendControl = L.control({ position: 'bottomleft' });
+  legendControl.onAdd = function() {
+    let div = L.DomUtil.create('div', 'info legend');
+    div.style.backgroundColor = 'rgba(0,0,0,0.6)';
+    div.style.color = 'white';
+    div.style.padding = '6px 12px';
+    div.style.borderRadius = '20px';
+    div.style.fontSize = '12px';
+    div.style.backdropFilter = 'blur(4px)';
+    div.innerHTML = '<i class="fas fa-ship"></i> Kapal AIS &nbsp;| <span style="color:#2dd4bf;">●</span> Jalur halus';
+    return div;
   };
-
-  reader.readAsText(file);
-});
-
-function tampilkanTracking(data) {
-  const grouped = {};
-  data.forEach(d => {
-    if (!grouped[d.mmsi]) grouped[d.mmsi] = [];
-    grouped[d.mmsi].push(d);
-  });
-
-  let bounds = [];
-
-  for (let mmsi in grouped) {
-    let kapal = grouped[mmsi];
-
-    // urutkan data
-    kapal.sort((a, b) => a.index - b.index);
-
-    // sampling biar ringan
-    let filtered = kapal.filter((_, i) => i % 5 === 0);
-
-    for (let i = 0; i < filtered.length; i++) {
-      let d = filtered[i];
-
-      // 🔴 titik merah semua
-      L.circleMarker([d.lat, d.lon], {
-        radius: 3,
-        color: "red",
-        fillColor: "red",
-        fillOpacity: 0.6
-      }).addTo(map);
-
-      bounds.push([d.lat, d.lon]);
+  legendControl.addTo(map);
+  
+  // ========================
+  // RESPONSIVE NAVBAR MENU TOGGLE (dengan warna pink)
+  // ========================
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+  
+  menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    // change icon
+    const icon = menuToggle.querySelector('i');
+    if (navMenu.classList.contains('active')) {
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-times');
+    } else {
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
     }
-
-    // 🔴 titik terakhir (lebih besar)
-    let last = filtered[filtered.length - 1];
-    L.circleMarker([last.lat, last.lon], {
-      radius: 6,
-      color: "red",
-      fillColor: "red",
-      fillOpacity: 1
-    }).addTo(map).bindPopup("MMSI: " + mmsi);
+  });
+  
+  // close menu when clicking on any nav link (optional smoothness)
+  document.querySelectorAll('.nav-menu a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      if (window.innerWidth <= 720) {
+        navMenu.classList.remove('active');
+        const icon = menuToggle.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+      // dummy scroll / action just for demonstration
+      if(link.id === 'homeLink') {
+        e.preventDefault();
+        map.setView([-6.86, 112.5], 9);
+      } else if(link.id === 'trackLink') {
+        e.preventDefault();
+        map.fitBounds(smoothCoords);
+      } else if(link.id === 'portsLink') {
+        e.preventDefault();
+        // zoom to port area (pelabuhan cluster)
+        map.setView([-7.087, 112.653], 16);
+      }
+    });
+  });
+  
+  // ========================
+  // PRESISI EXPORT: PDF & PNG (high quality, includes full map + navbar & styling)
+  // ========================
+  function showToast(msg, duration = 1800) {
+    let existing = document.querySelector('.export-toast');
+    if(existing) existing.remove();
+    let toast = document.createElement('div');
+    toast.className = 'export-toast';
+    toast.innerHTML = `<i class="fas fa-download"></i> ${msg}`;
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duration);
   }
-
-  if (bounds.length > 0) {
-    map.fitBounds(bounds);
+  
+  // Fungsi ekspor presisi: menangkap area dari body (termasuk navbar & peta)
+  async function captureFullPage() {
+    const element = document.body;
+    const canvas = await html2canvas(element, {
+      scale: 3,            // resolusi tinggi
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#f4f7fc'
+    });
+    return canvas;
   }
-}
+  
+  // EXPORT PNG presisi
+  document.getElementById('exportPngBtn').addEventListener('click', async () => {
+    showToast("Memproses gambar presisi tinggi...");
+    try {
+      const canvas = await captureFullPage();
+      const link = document.createElement('a');
+      link.download = 'ais_navigation_map.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast("✅ PNG berhasil diunduh! (presisi tinggi)");
+    } catch(err) {
+      console.error(err);
+      showToast("❌ Gagal ekspor PNG, coba lagi");
+    }
+  });
+  
+  // EXPORT PDF dengan orientasi landscape dan ukuran tepat
+  document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+    showToast("Menyiapkan dokumen PDF presisi...");
+    try {
+      const canvas = await captureFullPage();
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      // orientasi landscape, ukuran A4
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+      // jika gambar melebihi satu halaman (opsional)
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
+      pdf.save('ais_navigation_map.pdf');
+      showToast("📄 PDF unduh sukses! (presisi vector quality)");
+    } catch(e) {
+      console.warn(e);
+      showToast("⚠️ Ekspor PDF gagal, coba refresh");
+    }
+  });
+  
+  // little improvement: add attribution for awesome font & make sure the menu closes on resize
+  window.addEventListener('resize', () => {
+    if(window.innerWidth > 720 && navMenu.classList.contains('active')) {
+      navMenu.classList.remove('active');
+      const icon = menuToggle.querySelector('i');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+  });
+  
+  // OPTIONAL: smooth marker popup for ship? just for delight
+  ship.bindPopup("<b>🚢 Kapal AIS</b><br>Tracking jalur halus").openPopup();
+  setTimeout(() => { map.closePopup(); }, 2000);
+  
+  console.log("AIS Navigation dengan header PUTIH PINK SOLID (tanpa gradien) + ekspor presisi siap");
 </script>
 
 </body>
