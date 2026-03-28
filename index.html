@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <title>AIS Navigation | Smart Tracking System</title>
+  <title>Sea Route | Smart Maritime Tracking</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   
@@ -28,18 +28,17 @@
       overflow: hidden;
     }
     
-    /* ========== NAVBAR KHUSUS: PUTIH PINK TANPA GRADIEN ========== */
+    /* ========== NAVBAR KHUSUS: PUTIH + SENTUHAN BIRU (TANPA GRADIEN) ========== */
     .navbar {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       z-index: 1000;
-      /* PUTIH PINK SOLID - TANPA GRADIEN */
-      background: #fff0f5;  /* putih pink lembut */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0, 100, 150, 0.12);
+      border-bottom: 2px solid #2c7da0;
       transition: all 0.3s ease;
-      border-bottom: 1px solid #ffc0cb;
     }
     
     .nav-container {
@@ -60,26 +59,24 @@
     
     .logo-icon {
       font-size: 1.8rem;
-      color: #d44c6f;  /* pink tua yang elegan */
+      color: #1e5f7a;
       filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
     }
     
     .brand-text {
       font-size: 1.5rem;
       font-weight: 700;
-      /* solid color - tanpa gradien */
-      color: #b13e5c;
+      color: #0a4b6e;
       letter-spacing: -0.3px;
     }
     
     .brand-sub {
       font-size: 0.75rem;
-      color: #d96c8a;
+      color: #5a7d9a;
       margin-left: 5px;
-      font-weight: 500;
+      font-weight: 400;
     }
     
-    /* navigation menu (desktop) */
     .nav-menu {
       display: flex;
       align-items: center;
@@ -89,8 +86,8 @@
     
     .nav-menu li a {
       text-decoration: none;
-      color: #aa4d6e;  /* pink gelap untuk kontras */
-      font-weight: 600;
+      color: #1e4663;
+      font-weight: 500;
       font-size: 1rem;
       transition: 0.2s;
       display: flex;
@@ -102,20 +99,14 @@
     
     .nav-menu li a i {
       font-size: 1.1rem;
-      color: #d65c7e;
+      color: #2c7da0;
     }
     
     .nav-menu li a:hover {
-      background: #ffe4ed;
-      color: #b13e5c;
-      transform: translateY(-1px);
+      background: #e3f0f5;
+      color: #0f5b7a;
     }
     
-    .nav-menu li a:hover i {
-      color: #b13e5c;
-    }
-    
-    /* Export button group style - disesuaikan dengan tema pink putih */
     .export-buttons {
       display: flex;
       gap: 12px;
@@ -123,7 +114,7 @@
     
     .btn-export {
       border: none;
-      background: #ffdae6;
+      background: #f0f6fa;
       padding: 8px 18px;
       border-radius: 40px;
       font-weight: 600;
@@ -133,51 +124,47 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #b13e5c;
-      border: 1px solid #ffb7c5;
-    }
-    
-    .btn-export i {
-      font-size: 1rem;
+      color: #155f7c;
+      border: 1px solid #cde3ed;
     }
     
     .btn-pdf {
-      background: #ffe0ea;
+      background: #eef2f5;
+      color: #b91c1c;
+      border-color: #ffcdcd;
     }
     
     .btn-pdf:hover {
-      background: #ffcad8;
+      background: #ffe6e6;
       transform: scale(1.02);
     }
     
     .btn-png {
-      background: #ffe0ea;
+      background: #eef2f5;
+      color: #0a6b8c;
+      border-color: #cae9f2;
     }
     
     .btn-png:hover {
-      background: #ffcad8;
+      background: #ddf4fc;
       transform: scale(1.02);
     }
     
-    /* Mobile responsive menu (hamburger) - sesuaikan warna pink */
     .menu-toggle {
       display: none;
       font-size: 1.8rem;
       background: none;
       border: none;
-      color: #b13e5c;
+      color: #1e5f7a;
       cursor: pointer;
-      transition: 0.2s;
     }
     
-    /* map container */
     #map {
       height: 100vh;
       width: 100%;
       z-index: 1;
     }
     
-    /* floating info badge (optional) */
     .info-badge {
       position: fixed;
       bottom: 20px;
@@ -196,30 +183,96 @@
       gap: 6px;
     }
     
-    /* responsif untuk tablet dan mobile */
-    @media (max-width: 860px) {
+    /* Vessel Data Card - DIPERKECIL & RESPONSIF (compact) */
+    .vessel-data-card {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(10, 30, 45, 0.92);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 8px 14px;
+      color: white;
+      font-size: 11px;
+      font-family: 'Segoe UI', monospace;
+      z-index: 900;
+      border-left: 3px solid #2c7da0;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+      pointer-events: none;
+      max-width: 280px;
+      transition: 0.2s;
+      line-height: 1.35;
+    }
+    
+    .vessel-data-card h4 {
+      margin: 0 0 4px 0;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #7bc4e0;
+      letter-spacing: 0.3px;
+    }
+    
+    .vessel-data-card h4 i {
+      font-size: 10px;
+    }
+    
+    /* Compact grid: 2 kolom lebih rapat */
+    .vessel-data-card .data-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 3px 10px;
+      margin-top: 4px;
+      font-size: 10px;
+    }
+    
+    .vessel-data-card .label {
+      font-weight: 600;
+      color: #9bc2db;
+      font-size: 10px;
+    }
+    
+    .vessel-data-card .value {
+      font-weight: 500;
+      font-family: monospace;
+      font-size: 10px;
+      text-align: right;
+    }
+    
+    .vessel-data-card .data-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 5px;
+      font-size: 9px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 4px;
+      color: #b0d4f0;
+    }
+    
+    /* Responsive untuk mobile: card lebih kecil dan menyesuaikan */
+    @media (max-width: 720px) {
+      .vessel-data-card {
+        bottom: 70px;
+        left: 10px;
+        right: auto;
+        max-width: 260px;
+        padding: 6px 12px;
+      }
+      .vessel-data-card h4 {
+        font-size: 10px;
+      }
+      .vessel-data-card .data-grid {
+        gap: 2px 8px;
+        font-size: 9px;
+      }
+      .vessel-data-card .label, .vessel-data-card .value {
+        font-size: 9px;
+      }
       .nav-container {
         padding: 0.7rem 1.2rem;
       }
-      .brand-text {
-        font-size: 1.2rem;
-      }
-      .logo-icon {
-        font-size: 1.5rem;
-      }
-      .export-buttons {
-        gap: 6px;
-      }
-      .btn-export {
-        padding: 6px 12px;
-        font-size: 0.75rem;
-      }
-      .btn-export i {
-        font-size: 0.8rem;
-      }
-    }
-    
-    @media (max-width: 720px) {
       .menu-toggle {
         display: block;
         order: 2;
@@ -229,58 +282,51 @@
         top: 70px;
         left: -100%;
         width: 75%;
-        height: auto;
-        background: #fff5f9;  /* putih pink solid untuk menu mobile */
-        backdrop-filter: none;
+        background: #FFFFFF;
         flex-direction: column;
         align-items: flex-start;
         padding: 1.5rem;
         border-radius: 0 24px 24px 0;
         gap: 1.2rem;
-        transition: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        box-shadow: 5px 5px 20px rgba(0,0,0,0.1);
+        transition: 0.3s;
+        box-shadow: 5px 5px 20px rgba(0, 60, 80, 0.15);
         z-index: 999;
-        border-right: 2px solid #ffc0cb;
+        border-right: 2px solid #2c7da0;
       }
       .nav-menu.active {
         left: 0;
-      }
-      .nav-menu li a {
-        width: 100%;
-        padding: 10px 0;
-        color: #b13e5c;
       }
       .export-buttons {
         order: 1;
         margin-right: 10px;
       }
-      .logo-area {
-        order: 0;
-      }
-      .btn-export {
-        padding: 6px 12px;
-      }
-    }
-    
-    @media (max-width: 550px) {
-      .export-buttons .btn-text {
+      .btn-export .btn-text {
         display: none;
-      }
-      .btn-export i {
-        margin: 0;
       }
       .btn-export {
         padding: 8px 12px;
       }
     }
     
-    /* loading toast for export (simple) */
+    /* Layar sangat kecil (<=480px) */
+    @media (max-width: 480px) {
+      .vessel-data-card {
+        max-width: 240px;
+        padding: 5px 10px;
+        bottom: 65px;
+      }
+      .vessel-data-card .data-grid {
+        grid-template-columns: auto 1fr;
+        gap: 2px 6px;
+      }
+    }
+    
     .export-toast {
       position: fixed;
       bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
-      background: #1e293b;
+      background: #1e2f3a;
       color: white;
       padding: 8px 20px;
       border-radius: 40px;
@@ -296,14 +342,13 @@
 </head>
 <body>
 
-<!-- NAVIGATION BAR KHUSUS: PUTIH PINK SOLID (tanpa gradien) -->
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo-area">
-      <i class="fas fa-ship logo-icon"></i>
+      <i class="fas fa-water logo-icon"></i>
       <div>
-        <span class="brand-text">AIS Navigation</span>
-        <span class="brand-sub">smooth tracking</span>
+        <span class="brand-text">Sea Route</span>
+        <span class="brand-sub">maritime intelligence</span>
       </div>
     </div>
     
@@ -325,24 +370,77 @@
 </nav>
 
 <div id="map"></div>
-<div class="info-badge">
-  <i class="fas fa-ship"></i> AIS realtime | Bezier smooth path
+
+<!-- Data Kapal (AIS) - Compact & Responsive -->
+<div class="vessel-data-card" id="vesselDataCard">
+  <h4><i class="fas fa-ship"></i> AIS • ACTIVE</h4>
+  <div class="data-grid">
+    <span class="label">MMSI:</span><span class="value" id="displayMMSI">525013045</span>
+    <span class="label">Class:</span><span class="value" id="displayClass">A</span>
+    <span class="label">NavStatus:</span><span class="value" id="displayNavStatus">0</span>
+    <span class="label">SOG/COG:</span><span class="value" id="displaySogCog">0.0 kn / 57.5°</span>
+    <span class="label">HDG/ROT:</span><span class="value" id="displayHdgRot">191° / 0°/min</span>
+    <span class="label">Channel/UTC:</span><span class="value" id="displayChanUtc">B / 59s</span>
+  </div>
+  <div class="data-row">
+    <i class="far fa-clock"></i> <span id="displayTimestamp">2024-08-01 00:00:00</span>
+  </div>
 </div>
 
-<!-- Leaflet JS -->
+<div class="info-badge">
+  <i class="fas fa-ship"></i> Sea Route | Real-time vessel tracking
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-  // ========================
-  // 1. MAP INIT & DATA SAME AS ORIGINAL (enhanced)
-  // ========================
+  // ============================================================
+  // 1. DATA KAPAL YANG DITAMBAHKAN (versi compact tetap utuh)
+  // ============================================================
+  const vesselAISData = {
+    channel: "B",
+    msglen: 28,
+    immsi: "525013045",
+    mmsi: "525013045",
+    class: "A",
+    navstatus: 0,
+    rot: 0,
+    sog: 0,
+    cog: 57.5,
+    hdg: 191,
+    utc: 59,
+    smi: 0,
+    created_at: "2024-08-01T00:00:00.000Z"
+  };
+  
+  // Update UI card dengan tampilan compact dan rapi
+  function updateVesselCard(data) {
+    document.getElementById('displayMMSI').innerText = data.mmsi || '—';
+    document.getElementById('displayClass').innerText = data.class || '—';
+    let navText = data.navstatus === 0 ? "0" : data.navstatus;
+    document.getElementById('displayNavStatus').innerText = navText;
+    // Gabungkan SOG/COG
+    document.getElementById('displaySogCog').innerHTML = `${data.sog} kn / ${data.cog}°`;
+    // Gabungkan HDG/ROT
+    document.getElementById('displayHdgRot').innerHTML = `${data.hdg}° / ${data.rot}°/min`;
+    // Gabungkan Channel/UTC
+    document.getElementById('displayChanUtc').innerHTML = `${data.channel || "B"} / ${data.utc}s`;
+    let formattedDate = data.created_at ? new Date(data.created_at).toLocaleString() : "2024-08-01 00:00:00";
+    document.getElementById('displayTimestamp').innerHTML = `<i class="far fa-clock"></i> ${formattedDate}`;
+  }
+  
+  updateVesselCard(vesselAISData);
+  
+  // ============================================================
+  // 2. MAP INIT & MARITIME ROUTE (Sea Route)
+  // ============================================================
   let map = L.map('map').setView([-6.86, 112.5], 10);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 19
   }).addTo(map);
   
-  // original coordinates
+  // Original coordinates (sea route path)
   let coords = [
     [-6.860985, 112.417603], [-6.773716, 112.445068], [-6.678247, 112.513733],
     [-6.648239, 112.582397], [-6.626414, 112.681274], [-6.620957, 112.782898],
@@ -358,12 +456,12 @@
     [-7.087797, 112.652392]
   ];
   
-  // red points
+  // Red waypoints
   coords.forEach(p => {
     L.circleMarker(p, { radius: 3, color: "red", fillColor: "red", fillOpacity: 0.6 }).addTo(map);
   });
   
-  // Smooth bezier-like linear interpolation (same logic)
+  // Smooth line interpolation
   function smoothLine(points, resolution = 10) {
     let smooth = [];
     for (let i = 0; i < points.length - 1; i++) {
@@ -381,20 +479,43 @@
   }
   
   let smoothCoords = smoothLine(coords, 20);
+  let smoothPolyline = L.polyline(smoothCoords, { color: "#0f6b8c", weight: 3, opacity: 0.9 }).addTo(map);
   
-  // smooth polyline
-  let smoothPolyline = L.polyline(smoothCoords, { color: "blue", weight: 3, opacity: 0.85 }).addTo(map);
-  
-  // last marker
+  // Last marker
   let last = coords[coords.length-1];
   L.circleMarker(last, { radius: 6, color: "red", fillColor: "red", fillOpacity: 1 }).addTo(map);
   
-  // Ship icon & animation
-  let shipIcon = L.divIcon({ html: "🚢", className: "", iconSize: [24, 24], popupAnchor: [0, -10] });
+  // ============================================================
+  // 3. KAPAL BERJALAN DENGAN DATA AIS (POPUP TETAP LENGKAP)
+  // ============================================================
+  let shipIcon = L.divIcon({ html: "⛴️", className: "", iconSize: [28, 28], popupAnchor: [0, -14] });
   let ship = L.marker(smoothCoords[0], { icon: shipIcon }).addTo(map);
-  let index = 0;
-  let speedMs = 45;  // smooth animation speed
   
+  // Popup yang menampilkan data kapal lengkap (tetap informatif)
+  let vesselPopupContent = `
+    <div style="font-family: monospace; min-width: 200px;">
+      <b style="color:#0a4b6e;">🛳️ VESSEL AIS DETAIL</b><hr style="margin:4px 0">
+      <table style="width:100%; font-size:12px;">
+        <tr><td><b>MMSI:</b></td><td>${vesselAISData.mmsi}</td></tr>
+        <tr><td><b>Class:</b></td><td>${vesselAISData.class}</td></tr>
+        <tr><td><b>NavStatus:</b></td><td>${vesselAISData.navstatus === 0 ? 'Under way' : vesselAISData.navstatus}</td></tr>
+        <tr><td><b>SOG:</b></td><td>${vesselAISData.sog} kn</td></tr>
+        <tr><td><b>COG:</b></td><td>${vesselAISData.cog}°</td></tr>
+        <tr><td><b>HDG:</b></td><td>${vesselAISData.hdg}°</td></tr>
+        <tr><td><b>ROT:</b></td><td>${vesselAISData.rot} °/min</td></tr>
+        <tr><td><b>Channel:</b></td><td>${vesselAISData.channel}</td></tr>
+        <tr><td><b>UTC:</b></td><td>${vesselAISData.utc} sec</td></tr>
+       </table>
+      <div style="font-size:10px; margin-top:5px;">📅 ${new Date(vesselAISData.created_at).toLocaleString()}</div>
+    </div>
+  `;
+  
+  ship.bindPopup(vesselPopupContent);
+  ship.bindTooltip(`⛴️ MMSI: ${vesselAISData.mmsi} | SOG: ${vesselAISData.sog} kn`, { sticky: true, offset: [10, -10] });
+  
+  // Animasi kapal
+  let index = 0;
+  let speedMs = 45;
   function animateShip() {
     if (index >= smoothCoords.length) index = 0;
     ship.setLatLng(smoothCoords[index]);
@@ -403,72 +524,70 @@
   }
   animateShip();
   
-  // fit bounds to original coords
   map.fitBounds(coords);
   
-  // ========================
-  // PELABUHAN DEFINITIONS (preserve all ports from original)
-  // ========================
+  // ============================================================
+  // 4. PELABUHAN DEFINITIONS (Ports) - TIDAK BERUBAH
+  // ============================================================
   let pelabuhan1 = [[-7.0865,112.6512],[-7.0865,112.6529],[-7.0872,112.6529],[-7.0873,112.6513],[-7.0865,112.6512]];
-  L.polygon(pelabuhan1, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0869,112.6520]).addTo(map).bindPopup("Pelabuhan 1");
+  L.polygon(pelabuhan1, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0869,112.6520]).addTo(map).bindPopup("⚓ Pelabuhan 1 | Sea Route Hub");
   
   let pelabuhan2 = [[-7.0876,112.6513],[-7.0876,112.6529],[-7.0883,112.6529],[-7.0883,112.6513],[-7.0876,112.6513]];
-  L.polygon(pelabuhan2, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0880,112.6520]).addTo(map).bindPopup("Pelabuhan 2");
+  L.polygon(pelabuhan2, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0880,112.6520]).addTo(map).bindPopup("⚓ Pelabuhan 2 | Cargo Terminal");
   
   let pelabuhan3 = [[-7.0886,112.6513],[-7.0886,112.6529],[-7.0893,112.6528],[-7.0894,112.6513],[-7.0886,112.6513]];
-  L.polygon(pelabuhan3, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0890,112.6521]).addTo(map).bindPopup("Pelabuhan 3");
+  L.polygon(pelabuhan3, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0890,112.6521]).addTo(map).bindPopup("⚓ Pelabuhan 3 | Ferry Point");
   
   let pelabuhan4 = [[-7.0896,112.6513],[-7.0895,112.6529],[-7.0903,112.6529],[-7.0905,112.6513],[-7.0896,112.6513]];
-  L.polygon(pelabuhan4, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0900,112.6521]).addTo(map).bindPopup("Pelabuhan 4");
+  L.polygon(pelabuhan4, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0900,112.6521]).addTo(map).bindPopup("⚓ Pelabuhan 4 | Marina");
   
   let pelabuhan5 = [[-7.0864,112.6536],[-7.0864,112.6552],[-7.0876,112.6553],[-7.0876,112.6535]];
-  L.polygon(pelabuhan5, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0870,112.6544]).addTo(map).bindPopup("Pelabuhan 5");
+  L.polygon(pelabuhan5, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0870,112.6544]).addTo(map).bindPopup("⚓ Pelabuhan 5 | Fishing Port");
   
   let pelabuhan6 = [[-7.0878,112.6535],[-7.0878,112.6553],[-7.0889,112.6553],[-7.0890,112.6535]];
-  L.polygon(pelabuhan6, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0884,112.6544]).addTo(map).bindPopup("Pelabuhan 6");
+  L.polygon(pelabuhan6, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0884,112.6544]).addTo(map).bindPopup("⚓ Pelabuhan 6 | Industrial Dock");
   
   let pelabuhan7 = [[-7.0891,112.6535],[-7.0891,112.6554],[-7.0902,112.6554],[-7.0903,112.6536]];
-  L.polygon(pelabuhan7, { color: "green", weight: 2, fillColor: "green", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0896,112.6545]).addTo(map).bindPopup("Pelabuhan 7");
+  L.polygon(pelabuhan7, { color: "#2c7da0", weight: 2, fillColor: "#2c7da0", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0896,112.6545]).addTo(map).bindPopup("⚓ Pelabuhan 7 | Passenger Terminal");
   
   let pelabuhan8 = [[-7.0836,112.6541],[-7.0838,112.6556],[-7.0848,112.6555],[-7.0847,112.6538]];
-  L.polygon(pelabuhan8, { color: "yellow", weight: 2, fillColor: "yellow", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0842,112.6547]).addTo(map).bindPopup("Pelabuhan 8");
+  L.polygon(pelabuhan8, { color: "#eab308", weight: 2, fillColor: "#eab308", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0842,112.6547]).addTo(map).bindPopup("🏝️ Pelabuhan 8 | Coastal Port");
   
   let pelabuhan9 = [[-7.0849,112.6538],[-7.0850,112.6555],[-7.0862,112.6553],[-7.0862,112.6535]];
-  L.polygon(pelabuhan9, { color: "yellow", weight: 2, fillColor: "yellow", fillOpacity: 0.2 }).addTo(map);
-  L.marker([-7.0856,112.6545]).addTo(map).bindPopup("Pelabuhan 9");
+  L.polygon(pelabuhan9, { color: "#eab308", weight: 2, fillColor: "#eab308", fillOpacity: 0.2 }).addTo(map);
+  L.marker([-7.0856,112.6545]).addTo(map).bindPopup("🏝️ Pelabuhan 9 | Traditional Harbor");
   
-  // small optional extra: add a subtle legend
+  // Legend control
   let legendControl = L.control({ position: 'bottomleft' });
   legendControl.onAdd = function() {
     let div = L.DomUtil.create('div', 'info legend');
-    div.style.backgroundColor = 'rgba(0,0,0,0.6)';
+    div.style.backgroundColor = 'rgba(10, 30, 45, 0.8)';
     div.style.color = 'white';
-    div.style.padding = '6px 12px';
-    div.style.borderRadius = '20px';
+    div.style.padding = '6px 14px';
+    div.style.borderRadius = '24px';
     div.style.fontSize = '12px';
     div.style.backdropFilter = 'blur(4px)';
-    div.innerHTML = '<i class="fas fa-ship"></i> Kapal AIS &nbsp;| <span style="color:#2dd4bf;">●</span> Jalur halus';
+    div.innerHTML = '<i class="fas fa-water"></i> Sea Route &nbsp;| <span style="color:#5bc0ff;">⛴️</span> Vessel + AIS Data &nbsp;| <i class="fas fa-anchor"></i> Ports';
     return div;
   };
   legendControl.addTo(map);
   
-  // ========================
-  // RESPONSIVE NAVBAR MENU TOGGLE (dengan warna pink)
-  // ========================
+  // ============================================================
+  // 5. NAVBAR INTERAKSI & RESPONSIVE
+  // ============================================================
   const menuToggle = document.getElementById('menuToggle');
   const navMenu = document.getElementById('navMenu');
   
   menuToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
-    // change icon
     const icon = menuToggle.querySelector('i');
     if (navMenu.classList.contains('active')) {
       icon.classList.remove('fa-bars');
@@ -479,7 +598,6 @@
     }
   });
   
-  // close menu when clicking on any nav link (optional smoothness)
   document.querySelectorAll('.nav-menu a').forEach(link => {
     link.addEventListener('click', (e) => {
       if (window.innerWidth <= 720) {
@@ -488,7 +606,6 @@
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
       }
-      // dummy scroll / action just for demonstration
       if(link.id === 'homeLink') {
         e.preventDefault();
         map.setView([-6.86, 112.5], 9);
@@ -497,15 +614,14 @@
         map.fitBounds(smoothCoords);
       } else if(link.id === 'portsLink') {
         e.preventDefault();
-        // zoom to port area (pelabuhan cluster)
-        map.setView([-7.087, 112.653], 16);
+        map.setView([-7.087, 112.653], 15);
       }
     });
   });
   
-  // ========================
-  // PRESISI EXPORT: PDF & PNG (high quality, includes full map + navbar & styling)
-  // ========================
+  // ============================================================
+  // 6. EXPORT FUNCTIONS (PDF/PNG) - SAMA
+  // ============================================================
   function showToast(msg, duration = 1800) {
     let existing = document.querySelector('.export-toast');
     if(existing) existing.remove();
@@ -516,72 +632,61 @@
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duration);
   }
   
-  // Fungsi ekspor presisi: menangkap area dari body (termasuk navbar & peta)
   async function captureFullPage() {
     const element = document.body;
     const canvas = await html2canvas(element, {
-      scale: 3,            // resolusi tinggi
+      scale: 3,
       useCORS: true,
       logging: false,
-      backgroundColor: '#f4f7fc'
+      backgroundColor: '#eef5fa'
     });
     return canvas;
   }
   
-  // EXPORT PNG presisi
   document.getElementById('exportPngBtn').addEventListener('click', async () => {
-    showToast("Memproses gambar presisi tinggi...");
+    showToast("Memproses gambar Sea Route + Vessel Data...");
     try {
       const canvas = await captureFullPage();
       const link = document.createElement('a');
-      link.download = 'ais_navigation_map.png';
+      link.download = 'sea_route_vessel_data.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
-      showToast("✅ PNG berhasil diunduh! (presisi tinggi)");
+      showToast("✅ PNG berhasil diunduh (dengan data kapal)!");
     } catch(err) {
       console.error(err);
-      showToast("❌ Gagal ekspor PNG, coba lagi");
+      showToast("❌ Gagal ekspor PNG");
     }
   });
   
-  // EXPORT PDF dengan orientasi landscape dan ukuran tepat
   document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-    showToast("Menyiapkan dokumen PDF presisi...");
+    showToast("Menyiapkan PDF Sea Route...");
     try {
       const canvas = await captureFullPage();
       const imgData = canvas.toDataURL('image/png');
       const { jsPDF } = window.jspdf;
-      // orientasi landscape, ukuran A4
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4'
-      });
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgWidth = pdfWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
-      
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pdfHeight;
-      // jika gambar melebihi satu halaman (opsional)
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pdfHeight;
       }
-      pdf.save('ais_navigation_map.pdf');
-      showToast("📄 PDF unduh sukses! (presisi vector quality)");
+      pdf.save('sea_route_ais_report.pdf');
+      showToast("📄 PDF Sea Route sukses!");
     } catch(e) {
       console.warn(e);
-      showToast("⚠️ Ekspor PDF gagal, coba refresh");
+      showToast("⚠️ Ekspor PDF gagal");
     }
   });
   
-  // little improvement: add attribution for awesome font & make sure the menu closes on resize
   window.addEventListener('resize', () => {
     if(window.innerWidth > 720 && navMenu.classList.contains('active')) {
       navMenu.classList.remove('active');
@@ -591,11 +696,13 @@
     }
   });
   
-  // OPTIONAL: smooth marker popup for ship? just for delight
-  ship.bindPopup("<b>🚢 Kapal AIS</b><br>Tracking jalur halus").openPopup();
-  setTimeout(() => { map.closePopup(); }, 2000);
+  setTimeout(() => {
+    ship.openPopup();
+    setTimeout(() => map.closePopup(), 4000);
+  }, 1200);
   
-  console.log("AIS Navigation dengan header PUTIH PINK SOLID (tanpa gradien) + ekspor presisi siap");
+  smoothPolyline.bindTooltip("Sea Route • Jalur Pelayaran (dengan data AIS)", { sticky: true });
+  console.log("Sea Route aktif — Data kapal compact & rapi, tanpa mengubah fitur lain.");
 </script>
 
 </body>
