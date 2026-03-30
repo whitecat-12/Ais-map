@@ -30,7 +30,6 @@
       width: 100vw;
     }
     
-    /* NAVBAR - Tombol menu di pojok kanan */
     .navbar {
       position: fixed;
       top: 0;
@@ -77,7 +76,6 @@
       margin-left: 5px;
     }
     
-    /* Desktop menu - di tengah */
     .nav-menu {
       display: flex;
       align-items: center;
@@ -110,7 +108,6 @@
       color: #0f5b7a;
     }
     
-    /* Container untuk tombol export dan menu toggle */
     .right-actions {
       display: flex;
       align-items: center;
@@ -157,7 +154,6 @@
       background: #ddf4fc;
     }
     
-    /* Tombol menu toggle - di pojok kanan */
     .menu-toggle {
       display: none;
       font-size: 1.6rem;
@@ -172,6 +168,151 @@
     
     .menu-toggle:hover {
       background: #e3f0f5;
+    }
+    
+    /* SEARCH BAR - MODERN & RESPONSIF */
+    .search-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 950;
+      width: 320px;
+      max-width: calc(100% - 40px);
+      transition: all 0.3s ease;
+    }
+    
+    .search-wrapper {
+      background: rgba(8, 22, 33, 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: 48px;
+      border: 1px solid rgba(59, 155, 203, 0.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .search-input-group {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px 4px 18px;
+      gap: 8px;
+    }
+    
+    .search-input-group i {
+      color: #6bc2e8;
+      font-size: 1rem;
+    }
+    
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 12px 0;
+      color: #eef4ff;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+    }
+    
+    .search-input::placeholder {
+      color: #8fcbe8;
+      opacity: 0.7;
+    }
+    
+    .search-clear {
+      background: none;
+      border: none;
+      color: #8fcbe8;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: 0.2s;
+      display: none;
+    }
+    
+    .search-clear:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .search-results {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: rgba(8, 22, 33, 0.98);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      margin-top: 8px;
+      border: 1px solid rgba(59, 155, 203, 0.3);
+    }
+    
+    .search-results.show {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .result-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(59, 155, 203, 0.2);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .result-item:hover {
+      background: rgba(59, 155, 203, 0.2);
+    }
+    
+    .result-item:last-child {
+      border-bottom: none;
+    }
+    
+    .result-name {
+      font-weight: 600;
+      color: #6bc2e8;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .result-details {
+      font-size: 0.75rem;
+      color: #9dcfec;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .no-result {
+      padding: 16px;
+      text-align: center;
+      color: #9dcfec;
+      font-size: 0.85rem;
+    }
+    
+    @media (max-width: 768px) {
+      .search-container {
+        top: 70px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+      }
+      
+      .search-wrapper {
+        border-radius: 40px;
+      }
+      
+      .search-input-group {
+        padding: 2px 8px 2px 16px;
+      }
+      
+      .search-input {
+        padding: 10px 0;
+        font-size: 0.85rem;
+      }
+      
+      .result-details {
+        gap: 12px;
+        font-size: 0.7rem;
+      }
     }
     
     .app-wrapper {
@@ -194,12 +335,10 @@
       z-index: 1;
     }
     
-    /* Sembunyikan atribusi Leaflet/OSM */
     .leaflet-control-attribution {
       display: none !important;
     }
     
-    /* VESSEL DATA CARD - DARK GLASS */
     .vessel-data-card {
       position: fixed;
       bottom: 20px;
@@ -282,7 +421,6 @@
       gap: 6px;
     }
     
-    /* RESPONSIVE - Mobile */
     @media (max-width: 768px) {
       .nav-container {
         padding: 0.6rem 1rem;
@@ -296,15 +434,11 @@
       .brand-sub {
         font-size: 0.6rem;
       }
-      
-      /* Tampilkan tombol menu di pojok kanan */
       .menu-toggle {
         display: flex;
         align-items: center;
         justify-content: center;
       }
-      
-      /* Sembunyikan menu desktop, tampilkan sebagai sidebar dari kanan */
       .nav-menu {
         position: fixed;
         top: 0;
@@ -322,46 +456,37 @@
         border-left: 3px solid #2c7da0;
         margin: 0;
       }
-      
       .nav-menu.active {
         right: 0;
       }
-      
       .nav-menu li a {
         width: 100%;
         padding: 10px 0;
         font-size: 1rem;
       }
-      
       .export-buttons {
         margin-right: 8px;
       }
-      
       .btn-export .btn-text {
         display: none;
       }
-      
       .btn-export {
         padding: 6px 12px;
       }
-      
       .vessel-data-card {
         bottom: 70px;
         left: 12px;
         max-width: 270px;
         padding: 8px 14px;
       }
-      
       .vessel-data-card .data-grid {
         gap: 4px 10px;
         font-size: 10px;
       }
-      
       .vessel-data-card .label,
       .vessel-data-card .value {
         font-size: 10px;
       }
-      
       .info-badge {
         bottom: 16px;
         right: 12px;
@@ -430,7 +555,6 @@
       }
     }
     
-    /* Custom Leaflet popup style - DARK, NO WHITE */
     .leaflet-popup-content-wrapper {
       background: #0a1a24 !important;
       color: #eef4ff !important;
@@ -483,23 +607,34 @@
   </div>
 </nav>
 
+<!-- SEARCH BAR - MODERN & TIDAK MENGGANGGU UI -->
+<div class="search-container">
+  <div class="search-wrapper">
+    <div class="search-input-group">
+      <i class="fas fa-search"></i>
+      <input type="text" class="search-input" id="searchInput" placeholder="Cari kapal (nama, panjang, draft)...">
+      <button class="search-clear" id="searchClear"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
 <div class="app-wrapper">
   <div id="exportContainer">
     <div id="map"></div>
     
-    <!-- Vessel AIS Data Card - DARK GLASS, NO WHITE -->
     <div class="vessel-data-card" id="vesselDataCard">
       <h4><i class="fas fa-ship"></i> AIS • ACTIVE VESSEL</h4>
       <div class="data-grid">
         <span class="label">MMSI:</span><span class="value" id="displayMMSI">525013045</span>
-        <span class="label">Class:</span><span class="value" id="displayClass">A</span>
-        <span class="label">NavStatus:</span><span class="value" id="displayNavStatus">0 (Underway)</span>
-        <span class="label">SOG/COG:</span><span class="value" id="displaySogCog">0.0 kn / 57.5°</span>
-        <span class="label">HDG/ROT:</span><span class="value" id="displayHdgRot">191° / 0°/min</span>
-        <span class="label">Channel/UTC:</span><span class="value" id="displayChanUtc">B / 59s</span>
+        <span class="label">Nama Kapal:</span><span class="value" id="displayName">-</span>
+        <span class="label">Panjang:</span><span class="value" id="displayLength">-</span>
+        <span class="label">Draft:</span><span class="value" id="displayDraft">-</span>
+        <span class="label">Tipe:</span><span class="value" id="displayType">-</span>
+        <span class="label">Kargo:</span><span class="value" id="displayCargo">-</span>
       </div>
       <div class="data-row">
-        <i class="far fa-clock"></i> <span id="displayTimestamp">2024-08-01 00:00:00</span>
+        <i class="far fa-calendar-alt"></i> <span id="displayLastBerthing">-</span>
       </div>
     </div>
   </div>
@@ -513,67 +648,199 @@
 
 <script>
   // ============================================================
-  // 1. DATA KAPAL AIS
+  // 1. DATA KAPAL PT SMELTING (VESSEL DATABASE)
   // ============================================================
-  const vesselAISData = {
-    channel: "B",
-    msglen: 28,
-    immsi: "525013045",
-    mmsi: "525013045",
-    class: "A",
-    navstatus: 0,
-    rot: 0,
-    sog: 0,
-    cog: 57.5,
-    hdg: 191,
-    utc: 59,
-    smi: 0,
-    created_at: "2024-08-01T00:00:00.000Z"
-  };
+  const vesselsDatabase = [
+    { mmsi: 525113036, name: "Lumoso Sahabat", type: "Bulk Carrier", length: 196, width: 36, draft: 8.6, last_berthing: "2026-01-06", visit_count: 6, cargo: "smelting_material" },
+    { mmsi: 525012145, name: "Petro Ocean Ill", type: "Bunkering Tanker", length: 11, width: 12, draft: null, last_berthing: "2025-12-31", visit_count: 1, cargo: "fuel_oil" },
+    { mmsi: 525121084, name: "Amolongo Emran", type: "Bulk Carrier", length: 196, width: 36, draft: 6.9, last_berthing: "2025-12-25", visit_count: 5, cargo: "copper_concentrate" },
+    { mmsi: 525113039, name: "Lumose Selalu", type: "Bulk Carrier", length: 196, width: 36, draft: null, last_berthing: "2025-12-31", visit_count: 5, cargo: "smelting_material" },
+    { mmsi: 525113037, name: "Lumoso Setia", type: "Bulk Carrier", length: 196, width: 36, draft: null, last_berthing: "2025-09-25", visit_count: 4, cargo: "smelting_material" },
+    { mmsi: 525600499, name: "Argha g", type: "Tanker", length: 89, width: 13, draft: null, last_berthing: "2025-09-27", visit_count: 1, cargo: "chemical" },
+    { mmsi: 525121083, name: "NIMAOME EMRAN", type: "Cargo", length: 196, width: 36, draft: 6.6, last_berthing: "2025-07-27", visit_count: 6, cargo: "general_cargo" },
+    { mmsi: 525121082, name: "SYABIL EMRAN", type: "Bulk Carrier", length: 196, width: 36, draft: null, last_berthing: "2025-06-04", visit_count: 2, cargo: "smelting_material" },
+    { mmsi: 525120002, name: "MV NAdhif", type: "Bulk Carrier", length: 190, width: 32, draft: 6.9, last_berthing: "2025-01-26", visit_count: 1, cargo: "smelting_material" },
+    { mmsi: 525018329, name: "Jayadi 03", type: "Tanker", length: 69, width: 10, draft: 4.2, last_berthing: "2025-01-24", visit_count: 1, status: "lepas", cargo: "fuel" }
+  ];
   
-  function updateVesselCard(data) {
-    document.getElementById('displayMMSI').innerText = data.mmsi;
-    document.getElementById('displayClass').innerText = data.class;
-    const navText = data.navstatus === 0 ? "0 (Underway)" : data.navstatus;
-    document.getElementById('displayNavStatus').innerText = navText;
-    document.getElementById('displaySogCog').innerHTML = `${data.sog} kn / ${data.cog}°`;
-    document.getElementById('displayHdgRot').innerHTML = `${data.hdg}° / ${data.rot}°/min`;
-    document.getElementById('displayChanUtc').innerHTML = `${data.channel} / ${data.utc}s`;
-    const formattedDate = new Date(data.created_at).toLocaleString('id-ID');
-    document.getElementById('displayTimestamp').innerHTML = `<i class="far fa-clock"></i> ${formattedDate}`;
+  // ============================================================
+  // 2. DATA AIS DEFAULT & FUNGSI UPDATE CARD
+  // ============================================================
+  let currentVessel = null;
+  
+  function updateVesselCardWithData(vessel) {
+    document.getElementById('displayMMSI').innerText = vessel.mmsi || '-';
+    document.getElementById('displayName').innerHTML = `<i class="fas fa-ship"></i> ${vessel.name || '-'}`;
+    document.getElementById('displayLength').innerText = vessel.length ? `${vessel.length} m` : '-';
+    document.getElementById('displayDraft').innerText = vessel.draft ? `${vessel.draft} m` : 'Tidak tersedia';
+    document.getElementById('displayType').innerText = vessel.type || '-';
+    document.getElementById('displayCargo').innerText = vessel.cargo ? vessel.cargo.replace(/_/g, ' ') : '-';
+    document.getElementById('displayLastBerthing').innerHTML = `<i class="far fa-calendar-alt"></i> Last Berthing: ${vessel.last_berthing || '-'} | Visit: ${vessel.visit_count || 0}x`;
   }
-  updateVesselCard(vesselAISData);
+  
+  // Fungsi update popup kapal
+  function updateShipPopup(vessel) {
+    const newPopupContent = `
+      <div style="font-family: 'Courier New', monospace; min-width: 260px;">
+        <b style="color:#6bc2e8;">🛳️ VESSEL AIS DETAIL</b>
+        <hr style="margin:6px 0; border-color:#2c7da0;">
+        <table style="width:100%; font-size:12px; color:#eef4ff;">
+          <tr><td style="font-weight:bold;">Nama Kapal:</td><td style="text-align:right;">${vessel.name}</td></tr>
+          <tr><td style="font-weight:bold;">MMSI:</td><td style="text-align:right;">${vessel.mmsi}</td></tr>
+          <tr><td style="font-weight:bold;">Panjang:</td><td style="text-align:right;">${vessel.length} m</td></tr>
+          <tr><td style="font-weight:bold;">Draft:</td><td style="text-align:right;">${vessel.draft ? vessel.draft + ' m' : 'N/A'}</td></tr>
+          <tr><td style="font-weight:bold;">Tipe:</td><td style="text-align:right;">${vessel.type}</td></tr>
+          <tr><td style="font-weight:bold;">Kargo:</td><td style="text-align:right;">${vessel.cargo ? vessel.cargo.replace(/_/g, ' ') : '-'}</td></tr>
+          <tr><td style="font-weight:bold;">Last Berthing:</td><td style="text-align:right;">${vessel.last_berthing || '-'}</td></tr>
+          <tr><td style="font-weight:bold;">Visit Count:</td><td style="text-align:right;">${vessel.visit_count || 0}x</td></tr>
+        </table>
+      </div>
+    `;
+    ship.unbindPopup();
+    ship.bindPopup(newPopupContent);
+  }
   
   // ============================================================
-  // 2. MAP INIT - TANPA ATRIBUSI
+  // 3. SEARCH FUNCTIONALITY
   // ============================================================
-  const map = L.map('map', { renderer: L.canvas(), preferCanvas: true, attributionControl: false }).setView([-6.86, 112.5], 10);
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  const searchClear = document.getElementById('searchClear');
+  const searchContainer = document.querySelector('.search-container');
+  
+  function searchVessels(query) {
+    if (!query.trim()) return [];
+    const lowerQuery = query.toLowerCase();
+    return vesselsDatabase.filter(vessel => {
+      const nameMatch = vessel.name.toLowerCase().includes(lowerQuery);
+      const lengthMatch = vessel.length && vessel.length.toString().includes(lowerQuery);
+      const draftMatch = vessel.draft && vessel.draft.toString().includes(lowerQuery);
+      return nameMatch || lengthMatch || draftMatch;
+    });
+  }
+  
+  function renderResults(results) {
+    if (results.length === 0) {
+      searchResults.innerHTML = '<div class="no-result"><i class="fas fa-ship"></i> Kapal tidak ditemukan</div>';
+      searchResults.classList.add('show');
+      return;
+    }
+    
+    searchResults.innerHTML = results.map(vessel => `
+      <div class="result-item" data-mmsi="${vessel.mmsi}">
+        <div class="result-name">
+          <i class="fas fa-ship"></i> ${vessel.name}
+        </div>
+        <div class="result-details">
+          <span><i class="fas fa-ruler"></i> ${vessel.length}m</span>
+          <span><i class="fas fa-water"></i> Draft: ${vessel.draft ? vessel.draft + 'm' : 'N/A'}</span>
+          <span><i class="fas fa-box"></i> ${vessel.type}</span>
+        </div>
+      </div>
+    `).join('');
+    
+    searchResults.classList.add('show');
+    
+    document.querySelectorAll('.result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const mmsi = parseInt(item.dataset.mmsi);
+        const vessel = vesselsDatabase.find(v => v.mmsi === mmsi);
+        if (vessel) {
+          currentVessel = vessel;
+          updateVesselCardWithData(vessel);
+          updateShipPopup(vessel);
+          showVesselDetailToast(vessel);
+          searchInput.value = '';
+          searchResults.classList.remove('show');
+          searchClear.style.display = 'none';
+        }
+      });
+    });
+  }
+  
+  function showVesselDetailToast(vessel) {
+    const draftText = vessel.draft ? `${vessel.draft} m` : 'Tidak tersedia';
+    const toast = document.createElement('div');
+    toast.className = 'export-toast';
+    toast.style.bottom = '120px';
+    toast.style.background = '#0a1a24';
+    toast.style.borderLeft = '3px solid #3b9bcb';
+    toast.style.whiteSpace = 'normal';
+    toast.style.maxWidth = '300px';
+    toast.style.textAlign = 'center';
+    toast.innerHTML = `
+      <i class="fas fa-ship"></i> <strong>${vessel.name}</strong><br>
+      📏 Panjang: ${vessel.length} m | 📊 Draft: ${draftText}<br>
+      🏗️ Tipe: ${vessel.type} | 🚢 MMSI: ${vessel.mmsi}
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+  
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value;
+    if (query.trim()) {
+      searchClear.style.display = 'block';
+      const results = searchVessels(query);
+      renderResults(results);
+    } else {
+      searchClear.style.display = 'none';
+      searchResults.classList.remove('show');
+    }
+  });
+  
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchClear.style.display = 'none';
+    searchResults.classList.remove('show');
+    searchInput.focus();
+  });
+  
+  document.addEventListener('click', (e) => {
+    if (!searchContainer.contains(e.target)) {
+      searchResults.classList.remove('show');
+    }
+  });
+  
+  // ============================================================
+  // 4. KOORDINAT JALUR KAPAL
+  // ============================================================
+  const coords = [
+    [-6.1023, 112.0715], [-6.1351, 112.2308], [-6.1924, 112.4011],
+    [-6.2197, 112.5659], [-6.2279, 112.6950], [-6.2225, 112.8735],
+    [-6.2143, 113.0191], [-6.2170, 113.1345], [-6.2552, 113.2196],
+    [-6.3262, 113.2855], [-6.4518, 113.2800], [-6.5336, 113.2471],
+    [-6.6128, 113.1674], [-6.6673, 113.0960], [-6.7110, 113.0191],
+    [-6.7437, 112.9422], [-6.7764, 112.8680], [-6.8010, 112.8104],
+    [-6.8419, 112.7705], [-6.8801, 112.7307], [-6.9251, 112.6998],
+    [-6.9476, 112.6826], [-6.9810, 112.6703], [-7.0321, 112.6641],
+    [-7.0540, 112.6639], [-7.0639, 112.6636], [-7.0730, 112.6622],
+    [-7.0835, 112.6622], [-7.0932, 112.6619], [-7.0998, 112.6622],
+    [-7.1066, 112.6634], [-7.1125, 112.6632], [-7.1175, 112.6620],
+    [-7.1209, 112.6607], [-7.1227, 112.6593], [-7.1253, 112.6579],
+    [-7.1275, 112.6568], [-7.1291, 112.6560], [-7.1306, 112.6554],
+    [-7.1317, 112.6551], [-7.1322, 112.6551], [-7.1329, 112.6553],
+    [-7.1337, 112.6555]
+  ];
+  
+  // ============================================================
+  // 5. MAP INIT
+  // ============================================================
+  const map = L.map('map', { renderer: L.canvas(), preferCanvas: true, attributionControl: false }).setView([-6.5, 112.5], 9);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     detectRetina: true,
     attribution: ''
   }).addTo(map);
   
-  const coords = [
-    [-6.860985, 112.417603], [-6.773716, 112.445068], [-6.678247, 112.513733],
-    [-6.648239, 112.582397], [-6.626414, 112.681274], [-6.620957, 112.782898],
-    [-6.626414, 112.868042], [-6.629142, 112.953186], [-6.629142, 113.021851],
-    [-6.637327, 113.101501], [-6.710982, 113.112488], [-6.754624, 113.104248],
-    [-6.781898, 113.054810], [-6.784626, 112.983398], [-6.795535, 112.911987],
-    [-6.814626, 112.846069], [-6.852805, 112.780151], [-6.885527, 112.736206],
-    [-6.923019, 112.701187], [-6.965278, 112.681274], [-7.004127, 112.670975],
-    [-7.045016, 112.664795], [-7.068185, 112.662048], [-7.077725, 112.662048],
-    [-7.084113, 112.661533], [-7.089224, 112.661362], [-7.093483, 112.658875],
-    [-7.094334, 112.653809], [-7.092929, 112.650890], [-7.090885, 112.650247],
-    [-7.088521, 112.650311], [-7.087819, 112.651191], [-7.087819, 112.652006],
-    [-7.087797, 112.652392]
-  ];
-  
   coords.forEach(p => {
-    L.circleMarker(p, { radius: 3.2, color: "#ff5555", fillColor: "#ff7777", fillOpacity: 0.8, weight: 1 }).addTo(map);
+    L.circleMarker(p, { radius: 3.5, color: "#ff4444", fillColor: "#ff6666", fillOpacity: 0.85, weight: 1.5 }).addTo(map);
   });
   
-  function smoothLine(points, resolution = 28) {
+  function smoothLine(points, resolution = 20) {
     const smooth = [];
     for (let i = 0; i < points.length - 1; i++) {
       const p0 = points[i];
@@ -589,100 +856,74 @@
     return smooth;
   }
   
-  const smoothCoords = smoothLine(coords, 28);
+  const smoothCoords = smoothLine(coords, 25);
   const smoothPolyline = L.polyline(smoothCoords, { 
     color: "#0f6b8c", 
-    weight: 3.8, 
-    opacity: 0.92,
+    weight: 4, 
+    opacity: 0.95,
     smoothFactor: 0.8,
     lineCap: 'round',
     lineJoin: 'round'
   }).addTo(map);
   
-  L.circleMarker(coords[coords.length-1], { radius: 7, color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 1, weight: 2 }).addTo(map);
+  L.circleMarker(coords[coords.length-1], { radius: 8, color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 1, weight: 2 }).addTo(map);
   
   // ============================================================
-  // 3. KAPAL DENGAN POPUP DARK
+  // 6. KAPAL BERJALAN
   // ============================================================
   const shipIcon = L.divIcon({ 
-    html: '<div style="font-size:30px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));">⛴️</div>', 
+    html: '<div style="font-size:32px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));">⛴️</div>', 
     className: "", 
-    iconSize: [34, 34], 
-    popupAnchor: [0, -17] 
+    iconSize: [36, 36], 
+    popupAnchor: [0, -18] 
   });
   const ship = L.marker(smoothCoords[0], { icon: shipIcon }).addTo(map);
   
-  const vesselPopupContent = `
-    <div style="font-family: 'Courier New', monospace; min-width: 220px;">
-      <b style="color:#6bc2e8;">🛳️ VESSEL AIS DETAIL</b>
-      <hr style="margin:6px 0; border-color:#2c7da0;">
-      <table style="width:100%; font-size:12px; color:#eef4ff;">
-        <tr><td style="font-weight:bold;">MMSI:</td><td style="text-align:right;">${vesselAISData.mmsi}</td>
-        </tr><tr><td style="font-weight:bold;">Class:</td><td style="text-align:right;">${vesselAISData.class}</td>
-        </tr><tr><td style="font-weight:bold;">NavStatus:</td><td style="text-align:right;">${vesselAISData.navstatus === 0 ? 'Under way' : vesselAISData.navstatus}</td>
-        </tr><tr><td style="font-weight:bold;">SOG:</td><td style="text-align:right;">${vesselAISData.sog} kn</td>
-        </tr><tr><td style="font-weight:bold;">COG:</td><td style="text-align:right;">${vesselAISData.cog}°</td>
-        </tr><tr><td style="font-weight:bold;">HDG:</td><td style="text-align:right;">${vesselAISData.hdg}°</td>
-        </tr><tr><td style="font-weight:bold;">ROT:</td><td style="text-align:right;">${vesselAISData.rot} °/min</td>
-        </tr><tr><td style="font-weight:bold;">Channel:</td><td style="text-align:right;">${vesselAISData.channel}</td>
-        </tr><tr><td style="font-weight:bold;">UTC:</td><td style="text-align:right;">${vesselAISData.utc} sec</td>
-        </tr>
-      </table>
-      <div style="font-size:10px; margin-top:6px; color:#9dcfec;">📅 ${new Date(vesselAISData.created_at).toLocaleString()}</div>
-    </div>
-  `;
+  // Default popup untuk kapal
+  const defaultVessel = { mmsi: "525013045", name: "Active Vessel", type: "Cargo", length: 0, draft: null, cargo: "-", last_berthing: "-", visit_count: 0 };
+  updateShipPopup(defaultVessel);
   
-  ship.bindPopup(vesselPopupContent);
-  ship.bindTooltip(`⛴️ MMSI: ${vesselAISData.mmsi} | SOG: ${vesselAISData.sog} kn`, { sticky: true, offset: [12, -12] });
+  ship.bindTooltip(`⛴️ Klik untuk detail kapal`, { sticky: true, offset: [12, -12] });
   
   let shipIdx = 0;
   function animateShip() {
     if (shipIdx >= smoothCoords.length) shipIdx = 0;
     ship.setLatLng(smoothCoords[shipIdx]);
     shipIdx++;
-    setTimeout(animateShip, 44);
+    setTimeout(animateShip, 50);
   }
   animateShip();
   map.fitBounds(coords);
   
   // ============================================================
-  // 4. PELABUHAN
+  // 7. PELABUHAN (DOCKS)
   // ============================================================
-  const portAreas = [
-    { bounds: [[-7.0865,112.6512],[-7.0865,112.6529],[-7.0872,112.6529],[-7.0873,112.6513]], name: "Pelabuhan 1 | Sea Route Hub", pos: [-7.0869,112.6520] },
-    { bounds: [[-7.0876,112.6513],[-7.0876,112.6529],[-7.0883,112.6529],[-7.0883,112.6513]], name: "Pelabuhan 2 | Cargo Terminal", pos: [-7.0880,112.6520] },
-    { bounds: [[-7.0886,112.6513],[-7.0886,112.6529],[-7.0893,112.6528],[-7.0894,112.6513]], name: "Pelabuhan 3 | Ferry Point", pos: [-7.0890,112.6521] },
-    { bounds: [[-7.0896,112.6513],[-7.0895,112.6529],[-7.0903,112.6529],[-7.0905,112.6513]], name: "Pelabuhan 4 | Marina", pos: [-7.0900,112.6521] },
-    { bounds: [[-7.0864,112.6536],[-7.0864,112.6552],[-7.0876,112.6553],[-7.0876,112.6535]], name: "Pelabuhan 5 | Fishing Port", pos: [-7.0870,112.6544] },
-    { bounds: [[-7.0878,112.6535],[-7.0878,112.6553],[-7.0889,112.6553],[-7.0890,112.6535]], name: "Pelabuhan 6 | Industrial Dock", pos: [-7.0884,112.6544] },
-    { bounds: [[-7.0891,112.6535],[-7.0891,112.6554],[-7.0902,112.6554],[-7.0903,112.6536]], name: "Pelabuhan 7 | Passenger Terminal", pos: [-7.0896,112.6545] },
-    { bounds: [[-7.0836,112.6541],[-7.0838,112.6556],[-7.0848,112.6555],[-7.0847,112.6538]], name: "🏝️ Pelabuhan 8 | Coastal Port", pos: [-7.0842,112.6547], color: "#eab308" },
-    { bounds: [[-7.0849,112.6538],[-7.0850,112.6555],[-7.0862,112.6553],[-7.0862,112.6535]], name: "🏝️ Pelabuhan 9 | Traditional Harbor", pos: [-7.0856,112.6545], color: "#eab308" }
-  ];
+  const dock1Points = [[-7.1321, 112.6548], [-7.1342, 112.6554], [-7.1340, 112.6561], [-7.1319, 112.6555]];
+  const dock2Points = [[-7.1325, 112.6538], [-7.1323, 112.6545], [-7.1343, 112.6550], [-7.1345, 112.6543]];
   
-  portAreas.forEach(port => {
-    const polyColor = port.color || "#2c7da0";
-    L.polygon(port.bounds, { color: polyColor, weight: 2, fillColor: polyColor, fillOpacity: 0.25 }).addTo(map);
-    L.marker(port.pos).addTo(map).bindPopup(`⚓ ${port.name}`);
-  });
+  function addDock(points, dockName, centerLatLng, colorHex = "#1f9e6d") {
+    L.polygon(points, { color: colorHex, weight: 3, fillColor: colorHex, fillOpacity: 0.35 }).addTo(map);
+    const dockMarker = L.marker(centerLatLng, {
+      icon: L.divIcon({ html: '<div style="font-size: 26px;">⚓</div>', iconSize: [30, 30], className: 'dock-marker-icon' })
+    }).addTo(map);
+    dockMarker.bindPopup(`<b>${dockName}</b><br>📍 Area bongkar muat aktif`);
+  }
   
-  const legendControl = L.control({ position: 'bottomleft' });
-  legendControl.onAdd = () => {
-    const div = L.DomUtil.create('div', 'info legend');
-    div.style.backgroundColor = 'rgba(8, 22, 33, 0.85)';
-    div.style.color = '#eef4ff';
-    div.style.padding = '5px 12px';
-    div.style.borderRadius = '24px';
-    div.style.fontSize = '10px';
-    div.style.backdropFilter = 'blur(4px)';
-    div.style.fontFamily = 'monospace';
-    div.innerHTML = '<i class="fas fa-water"></i> Sea Route &nbsp;| ⛴️ AIS &nbsp;| ⚓ Ports';
-    return div;
-  };
-  legendControl.addTo(map);
+  function getPolygonCenter(points) {
+    let sumLat = 0, sumLng = 0;
+    points.forEach(p => { sumLat += p[0]; sumLng += p[1]; });
+    return [sumLat / points.length, sumLng / points.length];
+  }
+  
+  addDock(dock1Points, "DOCK 1 • Sea Route Hub", getPolygonCenter(dock1Points), "#2c9b77");
+  addDock(dock2Points, "DOCK 2 • Cargo Premier", getPolygonCenter(dock2Points), "#2c7da0");
+  
+  L.polyline([getPolygonCenter(dock1Points), getPolygonCenter(dock2Points)], {
+    color: "#ffaa55", weight: 1.5, opacity: 0.6, dashArray: "5, 8"
+  }).addTo(map);
   
   // ============================================================
-  // 5. NAVBAR TOGGLE - SIDEBAR DARI KANAN
+  // 8. NAVBAR TOGGLE
   // ============================================================
   const menuToggle = document.getElementById('menuToggle');
   const navMenu = document.getElementById('navMenu');
@@ -690,48 +931,39 @@
   menuToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
     const icon = menuToggle.querySelector('i');
-    if (navMenu.classList.contains('active')) {
-      icon.classList.remove('fa-bars');
-      icon.classList.add('fa-times');
-    } else {
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
-    }
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-times');
   });
   
-  // Tutup menu saat klik link
   document.querySelectorAll('.nav-menu a').forEach(link => {
     link.addEventListener('click', (e) => {
       if (window.innerWidth <= 768) {
         navMenu.classList.remove('active');
-        const icon = menuToggle.querySelector('i');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
+        menuToggle.querySelector('i').classList.add('fa-bars');
+        menuToggle.querySelector('i').classList.remove('fa-times');
       }
-      if (link.id === 'homeLink') { e.preventDefault(); map.setView([-6.86, 112.5], 9); }
+      if (link.id === 'homeLink') { e.preventDefault(); map.setView([-6.5, 112.5], 9); }
       else if (link.id === 'trackLink') { e.preventDefault(); map.fitBounds(smoothCoords); }
-      else if (link.id === 'portsLink') { e.preventDefault(); map.setView([-7.087, 112.653], 15); }
+      else if (link.id === 'portsLink') { e.preventDefault(); map.setView([-7.13, 112.655], 15); }
     });
   });
   
-  // Tutup menu saat klik di luar (optional)
   document.addEventListener('click', (e) => {
     if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
       if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
         navMenu.classList.remove('active');
-        const icon = menuToggle.querySelector('i');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
+        menuToggle.querySelector('i').classList.add('fa-bars');
+        menuToggle.querySelector('i').classList.remove('fa-times');
       }
     }
   });
   
   // ============================================================
-  // 6. EXPORT FUNCTIONS
+  // 9. EXPORT FUNCTIONS
   // ============================================================
-  function showToast(msg, duration = 2000) {
-    const existing = document.querySelector('.export-toast');
-    if (existing) existing.remove();
+  function showToastMsg(msg, duration = 2000) {
+    const existing = document.querySelector('.export-toast:not([style*="bottom: 120px"])');
+    if (existing && existing !== document.querySelector('.export-toast[style*="bottom: 120px"]')) existing.remove();
     const toast = document.createElement('div');
     toast.className = 'export-toast';
     toast.innerHTML = `<i class="fas fa-download"></i> ${msg}`;
@@ -741,33 +973,24 @@
   
   async function captureMapOnly() {
     const container = document.getElementById('exportContainer');
-    if (!container) throw new Error('Container not found');
-    const canvas = await html2canvas(container, {
-      scale: 4.0,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#eef5fa',
-      allowTaint: false
-    });
+    const canvas = await html2canvas(container, { scale: 4.0, useCORS: true, logging: false, backgroundColor: '#eef5fa' });
     return canvas;
   }
   
   document.getElementById('exportPngBtn').addEventListener('click', async () => {
-    showToast("Memproses gambar presisi tinggi...");
+    showToastMsg("Memproses gambar presisi tinggi...");
     try {
       const canvas = await captureMapOnly();
       const link = document.createElement('a');
       link.download = 'sea_route_precision.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
-      showToast("✅ PNG berhasil diunduh");
-    } catch (err) {
-      showToast("❌ Gagal ekspor PNG");
-    }
+      showToastMsg("✅ PNG berhasil diunduh");
+    } catch (err) { showToastMsg("❌ Gagal ekspor PNG"); }
   });
   
   document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-    showToast("Menyusun PDF presisi tinggi...");
+    showToastMsg("Menyusun PDF presisi tinggi...");
     try {
       const canvas = await captureMapOnly();
       const imgData = canvas.toDataURL('image/png');
@@ -777,8 +1000,7 @@
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgWidth = pdfWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+      let heightLeft = imgHeight, position = 0;
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
       heightLeft -= pdfHeight;
       while (heightLeft > 0) {
@@ -788,24 +1010,35 @@
         heightLeft -= pdfHeight;
       }
       pdf.save('sea_route_precision_report.pdf');
-      showToast("📄 PDF sukses diunduh!");
-    } catch (e) {
-      showToast("⚠️ Ekspor PDF gagal");
-    }
+      showToastMsg("📄 PDF sukses diunduh!");
+    } catch (e) { showToastMsg("⚠️ Ekspor PDF gagal"); }
   });
   
   window.addEventListener('resize', () => {
     if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
       navMenu.classList.remove('active');
-      const icon = menuToggle.querySelector('i');
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
+      menuToggle.querySelector('i').classList.add('fa-bars');
+      menuToggle.querySelector('i').classList.remove('fa-times');
     }
     setTimeout(() => map.invalidateSize(), 150);
   });
   
   setTimeout(() => { ship.openPopup(); setTimeout(() => map.closePopup(), 4500); }, 1300);
-  smoothPolyline.bindTooltip("Sea Route • High Precision Path", { sticky: true });
+  smoothPolyline.bindTooltip("Sea Route • New Maritime Path", { sticky: true });
+  
+  const dockLegend = L.control({ position: 'bottomright' });
+  dockLegend.onAdd = () => {
+    const div = L.DomUtil.create('div', 'info legend');
+    div.style.backgroundColor = 'rgba(8, 22, 33, 0.85)';
+    div.style.color = '#eef4ff';
+    div.style.padding = '6px 12px';
+    div.style.borderRadius = '24px';
+    div.style.fontSize = '10px';
+    div.style.backdropFilter = 'blur(4px)';
+    div.innerHTML = '<i class="fas fa-anchor"></i> DOCK 1 & DOCK 2 | <i class="fas fa-search"></i> Cari Kapal';
+    return div;
+  };
+  dockLegend.addTo(map);
 </script>
 
 </body>
