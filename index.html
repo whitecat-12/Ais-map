@@ -127,7 +127,7 @@
       transform: translateY(-2px);
     }
 
-    /* Tombol mode batimetri spesifik */
+    /* Tombol mode satelit/batimetri - diperbarui untuk default satelit */
     .btn-bathy-toggle {
       background: #eef2f7;
       border-radius: 44px;
@@ -185,12 +185,12 @@
       background: #e3f0f5;
     }
 
-    /* SEARCH BAR - posisi di kanan atas, tidak ketutupan menu */
+    /* SEARCH BAR - posisi di kanan atas, dengan z-index lebih tinggi dari navbar agar tidak tertutup header */
     .search-container {
       position: fixed;
       top: 90px;
       right: 28px;
-      z-index: 950;
+      z-index: 1050; /* Ditingkatkan agar selalu di atas navbar */
       width: 360px;
       max-width: calc(100% - 56px);
       transition: all 0.3s ease;
@@ -641,8 +641,8 @@
       <li><a href="#" id="homeLink"><i class="fas fa-map-marked-alt"></i> <span>Dashboard</span></a></li>
       <li><a href="#" id="trackLink"><i class="fas fa-route"></i> <span>Live Track</span></a></li>
       <li><a href="#" id="portsLink"><i class="fas fa-anchor"></i> <span>Pelabuhan</span></a></li>
-      <!-- TOMBOL BARU: BATHYMETRY TOGGLE (mode batimetri on/off) -->
-      <li><button id="bathyToggleBtn" class="btn-bathy-toggle active"><i class="fas fa-water"></i> <span>Mode Batimetri</span></button></li>
+      <!-- TOMBOL MODE: default mode satelit, teks dan ikon sesuai satelit -->
+      <li><button id="bathyToggleBtn" class="btn-bathy-toggle"><i class="fas fa-satellite"></i> <span>Mode Satelit</span></button></li>
       <li><button id="exportPngNav" class="btn-png-nav"><i class="fas fa-camera"></i> <span>PNG</span></button></li>
       <li><button id="exportPdfNav" class="btn-pdf-nav"><i class="fas fa-file-pdf"></i> <span>PDF</span></button></li>
     </ul>
@@ -654,7 +654,7 @@
   </div>
 </nav>
 
-<!-- Search Bar -->
+<!-- Search Bar - z-index sudah tinggi, tidak tertutup header -->
 <div class="search-container">
   <div class="search-wrapper">
     <div class="search-input-group">
@@ -683,8 +683,8 @@
         <i class="far fa-calendar-alt"></i> <span id="displayLastBerthing">-</span>
       </div>
       
-      <!-- LEGEND KEDALAMAN LAUT - HANYA MUNCUL SAAT BATIMETRI AKTIF -->
-      <div class="card-legend-section" id="bathyLegend">
+      <!-- LEGEND KEDALAMAN LAUT - disembunyikan saat mode satelit default -->
+      <div class="card-legend-section" id="bathyLegend" style="display: none;">
         <div class="card-legend-title">
           <i class="fas fa-water"></i> KEDALAMAN LAUT
         </div>
@@ -734,7 +734,7 @@
   
   // Tile layer references
   let currentTileLayer = null;
-  let bathyModeActive = true;   // default mode batimetri aktif
+  let bathyModeActive = false;   // DEFAULT: mode Satelit (false = satelit aktif, true = batimetri)
 
   // Helper
   function showLoading() {
@@ -752,7 +752,7 @@
     setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2600);
   }
 
-  // Fungsi mengganti layer peta sesuai mode batimetri
+  // Fungsi mengganti layer peta sesuai mode (false = satelit, true = batimetri)
   function setMapLayerMode(enableBathy) {
     if (currentTileLayer) {
       map.removeLayer(currentTileLayer);
@@ -762,12 +762,12 @@
       showToastMsg("🌊 Mode Batimetri AKTIF (peta kedalaman laut)");
     } else {
       currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom: 18, minZoom: 4, attribution: '' });
-      showToastMsg("🛰️ Mode Satelit AKTIF (default satellite map)");
+      showToastMsg("🛰️ Mode Satelit AKTIF (citra satelit)");
     }
     currentTileLayer.addTo(map);
   }
 
-  // Toggle mode batimetri dan perbarui tombol serta legend
+  // Toggle mode batimetri/satelit dan perbarui tombol serta legend
   function toggleBathyMode() {
     bathyModeActive = !bathyModeActive;
     setMapLayerMode(bathyModeActive);
@@ -778,11 +778,10 @@
       toggleBtn.classList.add('active');
       if (legendDiv) legendDiv.style.display = 'block';
     } else {
-      toggleBtn.innerHTML = '<i class="fas fa-satellite"></i> <span>Mode Satelit OFF</span>';
+      toggleBtn.innerHTML = '<i class="fas fa-satellite"></i> <span>Mode Satelit</span>';
       toggleBtn.classList.remove('active');
       if (legendDiv) legendDiv.style.display = 'none';
     }
-    // sedikit refresh tampilan supaya tidak terjadi artefak
     if (map) map.invalidateSize();
   }
 
@@ -851,8 +850,8 @@
 
   function initMap() {
     map = L.map('map', { attributionControl: false }).setView([-6.5, 112.5], 9);
-    // Inisialisasi tile layer berdasarkan mode awal (bathy true)
-    currentTileLayer = L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom: 14, minZoom: 4, tileSize: 512, zoomOffset: -1 });
+    // Default mode: Satelit (bathyModeActive = false)
+    currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom: 18, minZoom: 4, attribution: '' });
     currentTileLayer.addTo(map);
     
     const shipIcon = L.divIcon({ html: '<div style="font-size:36px;">⛴️</div>', iconSize: [40, 40], popupAnchor: [0, -20] });
@@ -867,13 +866,13 @@
       updateRoute(currentVessel);
       ship.bindPopup(`<b>${currentVessel.name}</b><br>${currentVessel.type}`);
     }
-    // Pastikan legend sesuai kondisi awal (batimetri aktif)
+    // Pastikan legend sesuai kondisi awal (Satelit aktif => legend hidden)
     const legendDiv = document.getElementById('bathyLegend');
-    if (legendDiv) legendDiv.style.display = 'block';
+    if (legendDiv) legendDiv.style.display = 'none';
     const toggleBtn = document.getElementById('bathyToggleBtn');
     if (toggleBtn) {
-      toggleBtn.innerHTML = '<i class="fas fa-water"></i> <span>Mode Batimetri ON</span>';
-      toggleBtn.classList.add('active');
+      toggleBtn.innerHTML = '<i class="fas fa-satellite"></i> <span>Mode Satelit</span>';
+      toggleBtn.classList.remove('active');
     }
   }
 
@@ -905,7 +904,7 @@
     document.getElementById('trackLink').addEventListener('click', (e) => { e.preventDefault(); if(currentRoutePoints.length) map.fitBounds(currentRoutePoints); });
     document.getElementById('portsLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-7.13,112.655],15); });
     
-    // Tombol Toggle Mode Batimetri
+    // Tombol Toggle Mode (Satelit <-> Batimetri)
     const bathyToggle = document.getElementById('bathyToggleBtn');
     bathyToggle.addEventListener('click', (e) => {
       e.preventDefault();
