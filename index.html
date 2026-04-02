@@ -25,13 +25,13 @@
 
     body {
       font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: #e8f0f5;
+      background: #eef2f7;
       overflow: hidden;
       height: 100vh;
       width: 100vw;
     }
 
-    /* Navbar Styling - DIPERBESAR UNTUK ICON & TEKS */
+    /* ========= HEADER / NAVBAR - RAPIH & MODERN ========= */
     .navbar {
       position: fixed;
       top: 0;
@@ -39,60 +39,72 @@
       right: 0;
       width: 100%;
       z-index: 1000;
-      background: #FFFFFF;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      border-bottom: 3px solid #2c7da0;
+      background: #ffffff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+      border-bottom: 2px solid #e9edf2;
+      transition: all 0.2s ease;
     }
 
     .nav-container {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 0.9rem 2rem;
+      padding: 0.75rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1.2rem;
+      gap: 1rem;
     }
 
+    /* Brand Area - Elegan & Spacious */
     .logo-area {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      padding: 4px 12px 4px 8px;
+      border-radius: 60px;
+      transition: transform 0.2s;
     }
-
+    .logo-area:hover {
+      transform: translateY(-1px);
+    }
     .logo-icon {
-      font-size: 2.2rem;
-      color: #1e5f7a;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+      font-size: 2rem;
+      color: #1e6f8f;
+      filter: drop-shadow(0 2px 6px rgba(0,105,140,0.2));
+      background: #eef4fc;
+      padding: 8px;
+      border-radius: 50%;
     }
-
+    .brand-text-group {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
     .brand-text {
-      font-size: 1.9rem;
+      font-size: 1.65rem;
       font-weight: 800;
       color: #0a4b6e;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
     }
-
     .brand-sub {
-      font-size: 0.85rem;
-      color: #2c7da0;
-      margin-left: 8px;
+      font-size: 0.7rem;
+      color: #4a7c9c;
       font-weight: 500;
-      background: #eef4fc;
-      padding: 2px 8px;
-      border-radius: 30px;
-      display: inline-block;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
     }
 
-    /* Menu navigasi - teks & icon lebih besar */
+    /* Navigation Menu - Clean & Airy */
     .nav-menu {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.5rem;
       list-style: none;
       margin: 0;
       padding: 0;
+      background: #ffffff;
     }
 
     .nav-menu li a,
@@ -100,205 +112,177 @@
       text-decoration: none;
       color: #1e4663;
       font-weight: 600;
-      font-size: 1.1rem;
-      transition: 0.2s;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 20px;
+      gap: 8px;
+      padding: 8px 18px;
       border-radius: 44px;
-      background: none;
+      background: transparent;
       border: none;
       cursor: pointer;
       font-family: inherit;
-      width: 100%;
+      white-space: nowrap;
     }
 
     .nav-menu li a i,
     .nav-menu li button i {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: #2c7da0;
+      transition: transform 0.2s;
     }
 
     .nav-menu li a:hover,
     .nav-menu li button:hover {
-      background: #e3f0f5;
+      background: #f0f6fa;
       color: #0f5b7a;
       transform: translateY(-2px);
     }
+    .nav-menu li a:hover i,
+    .nav-menu li button:hover i {
+      transform: scale(1.05);
+    }
 
-    /* Tombol mode satelit/batimetri - diperbarui untuk default satelit */
+    /* Mode Toggle Button Styling */
     .btn-bathy-toggle {
-      background: #eef2f7;
-      border-radius: 44px;
-      padding: 8px 20px;
+      background: #f0f4f9;
+      border: 1px solid #dce5ec;
     }
     .btn-bathy-toggle.active {
       background: #1e5f7a;
       color: white;
+      border-color: #1e5f7a;
     }
     .btn-bathy-toggle.active i {
       color: white;
     }
-    .btn-bathy-toggle i {
-      transition: 0.2s;
-    }
 
+    /* Export Buttons */
     .btn-pdf-nav {
-      color: #b91c1c;
+      color: #b22234;
     }
-
     .btn-pdf-nav i {
-      color: #b91c1c;
-      font-size: 1.3rem;
+      color: #b22234;
     }
-
     .btn-png-nav {
-      color: #0a6b8c;
+      color: #1e6f8f;
     }
-
     .btn-png-nav i {
-      color: #0a6b8c;
+      color: #1e6f8f;
     }
-
     .btn-pdf-nav:hover {
-      background: #ffe6e6;
+      background: #ffecec;
     }
-
     .btn-png-nav:hover {
-      background: #ddf4fc;
+      background: #e5f4fc;
     }
 
+    /* Mobile Menu Toggle */
     .menu-toggle {
       display: none;
-      font-size: 1.9rem;
-      background: none;
+      font-size: 1.7rem;
+      background: #f1f5f9;
       border: none;
       color: #1e5f7a;
       cursor: pointer;
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-radius: 50px;
       transition: 0.2s;
     }
-
     .menu-toggle:hover {
-      background: #e3f0f5;
+      background: #e3edf5;
     }
 
-    /* SEARCH BAR - posisi di kanan atas, dengan z-index lebih tinggi dari navbar agar tidak tertutup header */
+    /* SEARCH BAR - Elegant & tidak tertutup header */
     .search-container {
       position: fixed;
-      top: 90px;
+      top: 88px;
       right: 28px;
-      z-index: 1050; /* Ditingkatkan agar selalu di atas navbar */
+      z-index: 1050;
       width: 360px;
       max-width: calc(100% - 56px);
       transition: all 0.3s ease;
     }
 
     .search-wrapper {
-      background: rgba(8, 22, 33, 0.96);
-      backdrop-filter: blur(14px);
+      background: rgba(10, 30, 40, 0.94);
+      backdrop-filter: blur(16px);
       border-radius: 56px;
-      border: 1px solid rgba(59, 155, 203, 0.7);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(80, 170, 210, 0.6);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
     }
 
     .search-input-group {
       display: flex;
       align-items: center;
-      padding: 6px 12px 6px 24px;
+      padding: 5px 12px 5px 24px;
       gap: 12px;
     }
-
     .search-input-group i {
       color: #6bc2e8;
       font-size: 1.2rem;
     }
-
     .search-input {
       flex: 1;
       background: transparent;
       border: none;
-      padding: 14px 0;
-      color: #eef4ff;
-      font-size: 1rem;
+      padding: 12px 0;
+      color: #f0f9ff;
+      font-size: 0.95rem;
       outline: none;
       font-family: inherit;
     }
-
     .search-input::placeholder {
-      color: #b0d4f0;
-      opacity: 0.85;
-      font-size: 0.95rem;
+      color: #b8def5;
+      font-weight: 400;
     }
-
     .search-clear {
       background: none;
       border: none;
       color: #8fcbe8;
       cursor: pointer;
-      padding: 8px;
+      padding: 6px;
       border-radius: 50%;
       transition: 0.2s;
       display: none;
-      font-size: 1.1rem;
     }
-
-    .search-clear:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
     .search-results {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       background: rgba(8, 22, 33, 0.98);
       backdrop-filter: blur(14px);
       border-radius: 28px;
       margin-top: 12px;
       border: 1px solid rgba(59, 155, 203, 0.4);
     }
-
     .search-results.show {
       max-height: 460px;
       overflow-y: auto;
     }
-
     .result-item {
-      padding: 14px 18px;
+      padding: 12px 18px;
       border-bottom: 1px solid rgba(59, 155, 203, 0.25);
       cursor: pointer;
       transition: 0.2s;
     }
-
     .result-item:hover {
-      background: rgba(59, 155, 203, 0.25);
+      background: rgba(59, 155, 203, 0.3);
     }
-
     .result-name {
       font-weight: 700;
       color: #7ac9f0;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 1rem;
     }
-
     .result-details {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #b6defa;
       display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .no-result {
-      padding: 18px;
-      text-align: center;
-      color: #b6defa;
-      font-size: 0.9rem;
+      gap: 16px;
     }
 
     /* Vessel Data Card */
@@ -306,68 +290,61 @@
       position: fixed;
       bottom: 24px;
       left: 24px;
-      background: rgba(8, 22, 33, 0.96);
-      backdrop-filter: blur(18px);
+      background: rgba(8, 22, 33, 0.95);
+      backdrop-filter: blur(20px);
       border-radius: 24px;
-      padding: 14px 22px;
+      padding: 16px 22px;
       color: #eef4ff;
       font-family: 'Segoe UI', monospace;
       z-index: 900;
       border-left: 5px solid #3b9bcb;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 15px 32px rgba(0, 0, 0, 0.4);
       pointer-events: none;
       max-width: 380px;
     }
-
     .vessel-data-card h4 {
-      margin: 0 0 10px 0;
-      font-size: 15px;
+      margin: 0 0 12px 0;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       gap: 10px;
-      color: #7ac9f0;
+      letter-spacing: 0.3px;
+      color: #8ed0f5;
     }
-
     .data-grid {
       display: grid;
       grid-template-columns: auto 1fr;
       gap: 8px 18px;
-      font-size: 12px;
+      font-size: 0.8rem;
     }
-
     .label {
       font-weight: 700;
       color: #9ad2f5;
     }
-
     .value {
       font-weight: 600;
       font-family: monospace;
       text-align: right;
       color: #ffffff;
     }
-
     .data-row {
       display: flex;
       justify-content: flex-end;
       gap: 10px;
-      margin-top: 10px;
-      font-size: 10.5px;
+      margin-top: 12px;
+      font-size: 0.7rem;
       border-top: 1px solid rgba(107, 194, 232, 0.45);
       padding-top: 8px;
       color: #c2e0fa;
     }
-
-    /* Legend Section inside Vessel Card (hanya ditampilkan saat mode batimetri aktif) */
     .card-legend-section {
       margin-top: 14px;
       padding-top: 10px;
       border-top: 1px solid rgba(107, 194, 232, 0.5);
       transition: opacity 0.2s;
     }
-
     .card-legend-title {
-      font-size: 11px;
+      font-size: 0.7rem;
       font-weight: 700;
       color: #7ac9f0;
       margin-bottom: 8px;
@@ -375,38 +352,32 @@
       align-items: center;
       gap: 6px;
     }
-
     .card-legend-items {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      row-gap: 6px;
     }
-
     .card-legend-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 9.5px;
+      font-size: 0.7rem;
       color: #cfecff;
     }
-
     .card-legend-color {
-      width: 18px;
+      width: 20px;
       height: 12px;
       border-radius: 3px;
     }
-
-    /* Info Badges */
     .info-badge {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(8px);
-      padding: 8px 18px;
+      padding: 6px 18px;
       border-radius: 40px;
-      font-size: 12px;
+      font-size: 0.75rem;
       color: #e2f0ff;
       z-index: 900;
       pointer-events: none;
@@ -414,158 +385,69 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 500;
     }
-
-    /* Map */
     .app-wrapper {
       position: relative;
       width: 100%;
       height: 100vh;
       overflow: hidden;
     }
-
     #exportContainer {
       position: relative;
       width: 100%;
       height: 100vh;
       overflow: hidden;
     }
-
     #map {
       height: 100vh;
       width: 100%;
       z-index: 1;
     }
-
     .leaflet-control-attribution {
       display: none !important;
     }
 
-    /* RESPONSIVE: Tablet & Mobile - header tetap adaptif */
+    /* Responsive */
     @media (max-width: 1024px) {
-      .nav-container {
-        padding: 0.8rem 1.5rem;
-      }
-      .brand-text {
-        font-size: 1.7rem;
-      }
-      .logo-icon {
-        font-size: 2rem;
-      }
-      .nav-menu li a,
-      .nav-menu li button {
-        font-size: 1rem;
-        padding: 6px 16px;
-      }
-      .search-container {
-        top: 86px;
-        right: 20px;
-        width: 330px;
-      }
+      .nav-container { padding: 0.65rem 1.5rem; }
+      .brand-text { font-size: 1.45rem; }
+      .logo-icon { font-size: 1.7rem; padding: 6px; }
+      .nav-menu li a, .nav-menu li button { padding: 6px 14px; font-size: 0.9rem; }
+      .search-container { top: 84px; right: 20px; width: 320px; }
     }
-
     @media (max-width: 768px) {
-      .nav-container {
-        padding: 0.7rem 1.2rem;
-      }
-      .brand-text {
-        font-size: 1.5rem;
-      }
-      .brand-sub {
-        font-size: 0.7rem;
-      }
-      .logo-icon {
-        font-size: 1.8rem;
-      }
-      .menu-toggle {
-        display: flex;
-      }
+      .nav-container { padding: 0.6rem 1.2rem; }
+      .brand-text { font-size: 1.3rem; }
+      .logo-icon { font-size: 1.5rem; }
+      .brand-sub { font-size: 0.6rem; }
+      .menu-toggle { display: flex; align-items: center; }
       .nav-menu {
         position: fixed;
         top: 0;
         right: -300px;
         width: 280px;
         height: 100vh;
-        background: #FFFFFF;
+        background: #ffffff;
         flex-direction: column;
         align-items: flex-start;
         padding: 90px 1.8rem 2rem;
-        gap: 1.4rem;
+        gap: 1.2rem;
         transition: 0.3s ease;
-        box-shadow: -8px 0 28px rgba(0, 0, 0, 0.2);
+        box-shadow: -8px 0 28px rgba(0, 0, 0, 0.15);
         z-index: 999;
-        border-left: 4px solid #2c7da0;
+        border-left: 3px solid #2c7da0;
       }
-      .nav-menu.active {
-        right: 0;
-      }
-      .nav-menu li a,
-      .nav-menu li button {
-        font-size: 1.15rem;
-        padding: 12px 16px;
-        width: 100%;
-      }
-      .nav-menu li a i,
-      .nav-menu li button i {
-        font-size: 1.4rem;
-      }
-      .search-container {
-        top: 78px;
-        right: 12px;
-        left: 12px;
-        width: auto;
-        max-width: calc(100% - 24px);
-      }
-      .vessel-data-card {
-        bottom: 80px;
-        left: 12px;
-        max-width: 280px;
-        padding: 10px 16px;
-      }
-      .info-badge {
-        bottom: 18px;
-        right: 12px;
-        font-size: 9px;
-        padding: 5px 12px;
-      }
-      .card-legend-items {
-        gap: 10px;
-      }
-      .card-legend-item {
-        font-size: 8px;
-      }
-      .data-grid {
-        font-size: 10px;
-        gap: 5px 12px;
-      }
+      .nav-menu.active { right: 0; }
+      .nav-menu li a, .nav-menu li button { width: 100%; font-size: 1.05rem; padding: 10px 16px; }
+      .search-container { top: 76px; right: 12px; left: 12px; width: auto; max-width: calc(100% - 24px); }
+      .vessel-data-card { bottom: 80px; left: 12px; max-width: 270px; padding: 12px 16px; }
+      .info-badge { bottom: 16px; right: 12px; font-size: 0.65rem; }
     }
-
     @media (max-width: 480px) {
-      .brand-text {
-        font-size: 1.25rem;
-      }
-      .logo-icon {
-        font-size: 1.6rem;
-      }
-      .brand-sub {
-        font-size: 0.6rem;
-      }
-      .search-input-group i {
-        font-size: 1rem;
-      }
-      .search-input {
-        font-size: 0.9rem;
-        padding: 10px 0;
-      }
-      .search-container {
-        top: 72px;
-      }
-      .vessel-data-card h4 {
-        font-size: 12px;
-      }
+      .brand-text { font-size: 1.1rem; }
+      .logo-icon { font-size: 1.3rem; padding: 4px; }
+      .search-input { font-size: 0.85rem; }
     }
-
     .export-toast {
       position: fixed;
       bottom: 100px;
@@ -575,33 +457,26 @@
       color: white;
       padding: 10px 24px;
       border-radius: 50px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       z-index: 2000;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
       pointer-events: none;
       font-weight: 600;
       backdrop-filter: blur(10px);
       white-space: nowrap;
     }
-
     .leaflet-popup-content-wrapper {
       background: #0a1a24 !important;
       color: #eef4ff !important;
       border-radius: 16px !important;
-      border-left: 3px solid #3b9bcb !important;
     }
-
-    .leaflet-popup-tip {
-      background: #0a1a24 !important;
-    }
-
     .loading-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.8);
       z-index: 9999;
       display: flex;
       align-items: center;
@@ -610,20 +485,15 @@
       gap: 18px;
       color: white;
     }
-
     .loading-spinner {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       border: 5px solid rgba(59, 155, 203, 0.3);
       border-top: 5px solid #3b9bcb;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -632,16 +502,15 @@
   <div class="nav-container">
     <div class="logo-area">
       <i class="fas fa-water logo-icon"></i>
-      <div>
+      <div class="brand-text-group">
         <span class="brand-text">Sea Route</span>
-        <span class="brand-sub">precision maritime</span>
+        <span class="brand-sub">precision maritime • AIS intelligence</span>
       </div>
     </div>
     <ul class="nav-menu" id="navMenu">
       <li><a href="#" id="homeLink"><i class="fas fa-map-marked-alt"></i> <span>Dashboard</span></a></li>
       <li><a href="#" id="trackLink"><i class="fas fa-route"></i> <span>Live Track</span></a></li>
       <li><a href="#" id="portsLink"><i class="fas fa-anchor"></i> <span>Pelabuhan</span></a></li>
-      <!-- TOMBOL MODE: default mode satelit, teks dan ikon sesuai satelit -->
       <li><button id="bathyToggleBtn" class="btn-bathy-toggle"><i class="fas fa-satellite"></i> <span>Mode Satelit</span></button></li>
       <li><button id="exportPngNav" class="btn-png-nav"><i class="fas fa-camera"></i> <span>PNG</span></button></li>
       <li><button id="exportPdfNav" class="btn-pdf-nav"><i class="fas fa-file-pdf"></i> <span>PDF</span></button></li>
@@ -654,7 +523,6 @@
   </div>
 </nav>
 
-<!-- Search Bar - z-index sudah tinggi, tidak tertutup header -->
 <div class="search-container">
   <div class="search-wrapper">
     <div class="search-input-group">
@@ -682,110 +550,63 @@
       <div class="data-row">
         <i class="far fa-calendar-alt"></i> <span id="displayLastBerthing">-</span>
       </div>
-      
-      <!-- LEGEND KEDALAMAN LAUT - disembunyikan saat mode satelit default -->
       <div class="card-legend-section" id="bathyLegend" style="display: none;">
-        <div class="card-legend-title">
-          <i class="fas fa-water"></i> KEDALAMAN LAUT
-        </div>
+        <div class="card-legend-title"><i class="fas fa-water"></i> KEDALAMAN LAUT</div>
         <div class="card-legend-items">
-          <div class="card-legend-item">
-            <div class="card-legend-color" style="background: #b3e2fa;"></div>
-            <span>0-20m</span>
-          </div>
-          <div class="card-legend-item">
-            <div class="card-legend-color" style="background: #7bc5e8;"></div>
-            <span>20-50m</span>
-          </div>
-          <div class="card-legend-item">
-            <div class="card-legend-color" style="background: #4f9fd6;"></div>
-            <span>50-100m</span>
-          </div>
-          <div class="card-legend-item">
-            <div class="card-legend-color" style="background: #2c6e9e;"></div>
-            <span>100-200m</span>
-          </div>
-          <div class="card-legend-item">
-            <div class="card-legend-color" style="background: #0b3b5f;"></div>
-            <span>>200m</span>
-          </div>
+          <div class="card-legend-item"><div class="card-legend-color" style="background: #b3e2fa;"></div><span>0-20m</span></div>
+          <div class="card-legend-item"><div class="card-legend-color" style="background: #7bc5e8;"></div><span>20-50m</span></div>
+          <div class="card-legend-item"><div class="card-legend-color" style="background: #4f9fd6;"></div><span>50-100m</span></div>
+          <div class="card-legend-item"><div class="card-legend-color" style="background: #2c6e9e;"></div><span>100-200m</span></div>
+          <div class="card-legend-item"><div class="card-legend-color" style="background: #0b3b5f;"></div><span>>200m</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<div class="info-badge">
-  <i class="fas fa-map"></i> Sea Route | Maritime Tracking
-</div>
+<div class="info-badge"><i class="fas fa-map"></i> Sea Route | Real-time Maritime Intel</div>
 
 <script>
-  // Konfigurasi
   const MAPTILER_API_KEY = "xA9ASc2cIMEtQlXrHu2L";
   const BATHYMETRY_TILE_URL = `https://api.maptiler.com/tiles/terrain-rgb/{z}/{x}/{y}.png?key=${MAPTILER_API_KEY}`;
-  // Tile satellite default (map satellite from maptiler - hybrid/satellite)
   const SATELLITE_TILE_URL = `https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${MAPTILER_API_KEY}`;
 
   let vesselsDatabase = [];
   let currentVessel = null;
   let map, ship, currentPolyline, currentSmoothCoords = [];
   let shipAnimationInterval = null;
-  let currentRoutePoints = [];
-  
-  // Tile layer references
   let currentTileLayer = null;
-  let bathyModeActive = false;   // DEFAULT: mode Satelit (false = satelit aktif, true = batimetri)
+  let bathyModeActive = false;
 
-  // Helper
-  function showLoading() {
-    const overlay = document.createElement('div');
-    overlay.id = 'loadingOverlay';
-    overlay.className = 'loading-overlay';
-    overlay.innerHTML = `<div class="loading-spinner"></div><div><i class="fas fa-ship"></i> Memuat data maritim...</div>`;
-    document.body.appendChild(overlay);
-  }
-  function hideLoading() { const el = document.getElementById('loadingOverlay'); if (el) el.remove(); }
-  function showToastMsg(msg) {
-    const t = document.createElement('div'); t.className = 'export-toast';
-    t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
-    document.body.appendChild(t);
-    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2600);
-  }
+  function showLoading() { const div = document.createElement('div'); div.id='loadingOverlay'; div.className='loading-overlay'; div.innerHTML='<div class="loading-spinner"></div><div><i class="fas fa-ship"></i> Memuat data maritim ...</div>'; document.body.appendChild(div); }
+  function hideLoading() { const el=document.getElementById('loadingOverlay'); if(el) el.remove(); }
+  function showToastMsg(msg) { const t=document.createElement('div'); t.className='export-toast'; t.innerHTML=`<i class="fas fa-info-circle"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>{t.style.opacity='0'; setTimeout(()=>t.remove(),300);},2600); }
 
-  // Fungsi mengganti layer peta sesuai mode (false = satelit, true = batimetri)
   function setMapLayerMode(enableBathy) {
-    if (currentTileLayer) {
-      map.removeLayer(currentTileLayer);
-    }
-    if (enableBathy) {
-      currentTileLayer = L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom: 14, minZoom: 4, tileSize: 512, zoomOffset: -1, attribution: '' });
-      showToastMsg("🌊 Mode Batimetri AKTIF (peta kedalaman laut)");
-    } else {
-      currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom: 18, minZoom: 4, attribution: '' });
-      showToastMsg("🛰️ Mode Satelit AKTIF (citra satelit)");
-    }
+    if(currentTileLayer) map.removeLayer(currentTileLayer);
+    if(enableBathy) currentTileLayer = L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom:14, minZoom:4, tileSize:512, zoomOffset:-1, attribution:'' });
+    else currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom:18, minZoom:4, attribution:'' });
     currentTileLayer.addTo(map);
   }
 
-  // Toggle mode batimetri/satelit dan perbarui tombol serta legend
   function toggleBathyMode() {
     bathyModeActive = !bathyModeActive;
     setMapLayerMode(bathyModeActive);
     const toggleBtn = document.getElementById('bathyToggleBtn');
     const legendDiv = document.getElementById('bathyLegend');
-    if (bathyModeActive) {
+    if(bathyModeActive) {
       toggleBtn.innerHTML = '<i class="fas fa-water"></i> <span>Mode Batimetri ON</span>';
       toggleBtn.classList.add('active');
-      if (legendDiv) legendDiv.style.display = 'block';
+      legendDiv.style.display = 'block';
+      showToastMsg("🌊 Mode Batimetri aktif - peta kedalaman laut");
     } else {
       toggleBtn.innerHTML = '<i class="fas fa-satellite"></i> <span>Mode Satelit</span>';
       toggleBtn.classList.remove('active');
-      if (legendDiv) legendDiv.style.display = 'none';
+      legendDiv.style.display = 'none';
+      showToastMsg("🛰️ Mode Satelit aktif - citra satelit");
     }
-    if (map) map.invalidateSize();
+    if(map) map.invalidateSize();
   }
 
-  // Data Loading
   async function loadExternalData() {
     try {
       showLoading();
@@ -794,30 +615,20 @@
       const data = await response.json();
       vesselsDatabase = data.vessels;
     } catch (error) {
-      vesselsDatabase = getFallbackData();
-      showToastMsg("⚠️ Menggunakan data lokal (fallback) - JSON tidak ditemukan");
+      vesselsDatabase = [
+        { mmsi: 525113036, name: "Lumoso Sahabat", type: "Bulk Carrier", length: 196, width: 36, draft: 8.6, last_berthing: "2026-01-06", visit_count: 6, cargo: "smelting_material", route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
+        { mmsi: 525012145, name: "Petro Ocean Ill", type: "Bunkering Tanker", length: 110, width: 18, draft: 5.2, last_berthing: "2025-12-31", visit_count: 1, cargo: "fuel_oil", route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
+        { mmsi: 525121084, name: "Amolongo Emran", type: "Bulk Carrier", length: 196, width: 36, draft: 6.9, last_berthing: "2025-12-25", visit_count: 5, cargo: "copper_concentrate", route: [[-6.1023,112.0715],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1337,112.6555]] }
+      ];
+      showToastMsg("⚠️ Data lokal (demo) — berkas JSON tidak tersedia");
     } finally {
       hideLoading();
     }
   }
 
-  function getFallbackData() {
-    return [
-      { mmsi: 525113036, name: "Lumoso Sahabat", type: "Bulk Carrier", length: 196, width: 36, draft: 8.6, last_berthing: "2026-01-06", visit_count: 6, cargo: "smelting_material", route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
-      { mmsi: 525012145, name: "Petro Ocean Ill", type: "Bunkering Tanker", length: 110, width: 18, draft: 5.2, last_berthing: "2025-12-31", visit_count: 1, cargo: "fuel_oil", route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
-      { mmsi: 525121084, name: "Amolongo Emran", type: "Bulk Carrier", length: 196, width: 36, draft: 6.9, last_berthing: "2025-12-25", visit_count: 5, cargo: "copper_concentrate", route: [[-6.1023,112.0715],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1337,112.6555]] }
-    ];
-  }
-
-  function smoothLine(points, resolution = 20) {
-    const smooth = [];
-    for (let i = 0; i < points.length - 1; i++) {
-      const p0 = points[i], p1 = points[i+1];
-      for (let t = 0; t <= resolution; t++) {
-        const ratio = t / resolution;
-        smooth.push([p0[0] + (p1[0] - p0[0]) * ratio, p0[1] + (p1[1] - p0[1]) * ratio]);
-      }
-    }
+  function smoothLine(points, resolution=24) {
+    const smooth=[];
+    for(let i=0;i<points.length-1;i++){ const p0=points[i],p1=points[i+1]; for(let t=0;t<=resolution;t++){ const r=t/resolution; smooth.push([p0[0]+(p1[0]-p0[0])*r, p0[1]+(p1[1]-p0[1])*r]); } }
     smooth.push(points[points.length-1]);
     return smooth;
   }
@@ -833,96 +644,63 @@
   }
 
   function updateRoute(vessel) {
-    if (!vessel?.route?.length) return;
+    if(!vessel?.route?.length) return;
     currentRoutePoints = vessel.route;
-    if (currentPolyline) map.removeLayer(currentPolyline);
-    map.eachLayer(layer => { if (layer.options && layer.options.radius === 3.5 && layer.options.color === "#ff4444") map.removeLayer(layer); });
-    currentRoutePoints.forEach(p => L.circleMarker(p, { radius: 3.8, color: "#ff6666", fillColor: "#ff8888", fillOpacity: 0.85 }).addTo(map));
-    currentSmoothCoords = smoothLine(currentRoutePoints, 28);
-    currentPolyline = L.polyline(currentSmoothCoords, { color: "#0f8cae", weight: 5, opacity: 0.95 }).addTo(map);
-    if (shipAnimationInterval) clearInterval(shipAnimationInterval);
+    if(currentPolyline) map.removeLayer(currentPolyline);
+    map.eachLayer(layer => { if(layer.options && layer.options.radius === 3.5 && layer.options.color === "#ff4444") map.removeLayer(layer); });
+    currentRoutePoints.forEach(p => L.circleMarker(p, { radius: 4, color: "#ff7777", fillColor: "#ff9999", fillOpacity: 0.8 }).addTo(map));
+    currentSmoothCoords = smoothLine(currentRoutePoints, 26);
+    currentPolyline = L.polyline(currentSmoothCoords, { color: "#3fa7c4", weight: 5, opacity: 0.95 }).addTo(map);
+    if(shipAnimationInterval) clearInterval(shipAnimationInterval);
     ship.setLatLng(currentSmoothCoords[0]);
-    let idx = 0;
-    shipAnimationInterval = setInterval(() => { if(idx >= currentSmoothCoords.length) idx = 0; ship.setLatLng(currentSmoothCoords[idx]); idx++; }, 48);
-    ship.setTooltipContent(`⛴️ ${vessel.name}`);
+    let idx=0;
+    shipAnimationInterval = setInterval(()=>{ if(idx>=currentSmoothCoords.length) idx=0; ship.setLatLng(currentSmoothCoords[idx]); idx++; }, 48);
+    ship.setTooltipContent(`🚢 ${vessel.name}`);
     map.fitBounds(currentRoutePoints);
   }
 
   function initMap() {
     map = L.map('map', { attributionControl: false }).setView([-6.5, 112.5], 9);
-    // Default mode: Satelit (bathyModeActive = false)
-    currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom: 18, minZoom: 4, attribution: '' });
+    currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom:18, minZoom:4, attribution:'' });
     currentTileLayer.addTo(map);
-    
-    const shipIcon = L.divIcon({ html: '<div style="font-size:36px;">⛴️</div>', iconSize: [40, 40], popupAnchor: [0, -20] });
-    ship = L.marker([0, 0], { icon: shipIcon }).addTo(map);
+    const shipIcon = L.divIcon({ html: '<div style="font-size:38px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">⛴️</div>', iconSize:[42,42], popupAnchor:[0,-20] });
+    ship = L.marker([0,0], { icon: shipIcon }).addTo(map);
     const dock1 = [[-7.1321,112.6548],[-7.1342,112.6554],[-7.1340,112.6561],[-7.1319,112.6555]];
     const dock2 = [[-7.1325,112.6538],[-7.1323,112.6545],[-7.1343,112.6550],[-7.1345,112.6543]];
-    L.polygon(dock1, { color: "#2c9b77", weight: 3, fillOpacity: 0.4 }).addTo(map);
-    L.polygon(dock2, { color: "#2c7da0", weight: 3, fillOpacity: 0.4 }).addTo(map);
-    if (vesselsDatabase.length) {
-      currentVessel = vesselsDatabase[0];
-      updateVesselCard(currentVessel);
-      updateRoute(currentVessel);
-      ship.bindPopup(`<b>${currentVessel.name}</b><br>${currentVessel.type}`);
-    }
-    // Pastikan legend sesuai kondisi awal (Satelit aktif => legend hidden)
-    const legendDiv = document.getElementById('bathyLegend');
-    if (legendDiv) legendDiv.style.display = 'none';
-    const toggleBtn = document.getElementById('bathyToggleBtn');
-    if (toggleBtn) {
-      toggleBtn.innerHTML = '<i class="fas fa-satellite"></i> <span>Mode Satelit</span>';
-      toggleBtn.classList.remove('active');
-    }
+    L.polygon(dock1, { color:"#2c9b77", weight:3, fillOpacity:0.4 }).addTo(map);
+    L.polygon(dock2, { color:"#2c7da0", weight:3, fillOpacity:0.4 }).addTo(map);
+    if(vesselsDatabase.length){ currentVessel=vesselsDatabase[0]; updateVesselCard(currentVessel); updateRoute(currentVessel); ship.bindPopup(`<b>${currentVessel.name}</b><br>${currentVessel.type}`); }
+    document.getElementById('bathyLegend').style.display='none';
+    const toggleBtn=document.getElementById('bathyToggleBtn'); if(toggleBtn) { toggleBtn.innerHTML='<i class="fas fa-satellite"></i> <span>Mode Satelit</span>'; toggleBtn.classList.remove('active'); }
   }
 
   function setupInteractions() {
-    const searchInput = document.getElementById('searchInput'), clearBtn = document.getElementById('searchClear'), resultsDiv = document.getElementById('searchResults');
-    searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.trim();
-      if (q) {
-        clearBtn.style.display = 'block';
-        const filtered = vesselsDatabase.filter(v => v.name.toLowerCase().includes(q.toLowerCase()) || (v.length && v.length.toString().includes(q)));
-        if (filtered.length) {
-          resultsDiv.innerHTML = filtered.map(v => `<div class="result-item" data-mmsi="${v.mmsi}"><div class="result-name"><i class="fas fa-ship"></i> ${v.name}</div><div class="result-details"><span>${v.length}m</span><span>Draft: ${v.draft || 'N/A'}m</span></div></div>`).join('');
-          resultsDiv.classList.add('show');
-          document.querySelectorAll('.result-item').forEach(el => {
-            el.addEventListener('click', () => {
-              const vessel = vesselsDatabase.find(v => v.mmsi === parseInt(el.dataset.mmsi));
-              if (vessel) { currentVessel = vessel; updateVesselCard(vessel); updateRoute(vessel); showToastMsg(`✅ Kapal ${vessel.name} dipilih`); searchInput.value = ''; resultsDiv.classList.remove('show'); clearBtn.style.display = 'none'; }
-            });
-          });
-        } else { resultsDiv.innerHTML = '<div class="no-result">Kapal tidak ditemukan</div>'; resultsDiv.classList.add('show'); }
-      } else { clearBtn.style.display = 'none'; resultsDiv.classList.remove('show'); }
+    const searchInput=document.getElementById('searchInput'), clearBtn=document.getElementById('searchClear'), resultsDiv=document.getElementById('searchResults');
+    searchInput.addEventListener('input',(e)=>{
+      const q=e.target.value.trim();
+      if(q){ clearBtn.style.display='block';
+        const filtered=vesselsDatabase.filter(v=>v.name.toLowerCase().includes(q.toLowerCase())||(v.length && v.length.toString().includes(q)));
+        if(filtered.length){ resultsDiv.innerHTML=filtered.map(v=>`<div class="result-item" data-mmsi="${v.mmsi}"><div class="result-name"><i class="fas fa-ship"></i> ${v.name}</div><div class="result-details"><span>${v.length}m</span><span>Draft: ${v.draft||'N/A'}m</span></div></div>`).join(''); resultsDiv.classList.add('show');
+          document.querySelectorAll('.result-item').forEach(el=>{ el.addEventListener('click',()=>{ const vessel=vesselsDatabase.find(v=>v.mmsi===parseInt(el.dataset.mmsi)); if(vessel){ currentVessel=vessel; updateVesselCard(vessel); updateRoute(vessel); showToastMsg(`✅ Kapal ${vessel.name} aktif`); searchInput.value=''; resultsDiv.classList.remove('show'); clearBtn.style.display='none'; } }); });}
+        else{ resultsDiv.innerHTML='<div class="no-result">🚢 Kapal tidak ditemukan</div>'; resultsDiv.classList.add('show');} }
+      else{ clearBtn.style.display='none'; resultsDiv.classList.remove('show'); }
     });
-    clearBtn.addEventListener('click', () => { searchInput.value = ''; clearBtn.style.display = 'none'; resultsDiv.classList.remove('show'); searchInput.focus(); });
-    document.addEventListener('click', (e) => { if (!document.querySelector('.search-container').contains(e.target)) resultsDiv.classList.remove('show'); });
-    const menuToggle = document.getElementById('menuToggle'), navMenu = document.getElementById('navMenu');
-    menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); const ic = menuToggle.querySelector('i'); ic.classList.toggle('fa-bars'); ic.classList.toggle('fa-times'); });
-    document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(btn => btn.addEventListener('click', () => { if (window.innerWidth <= 768) { navMenu.classList.remove('active'); menuToggle.querySelector('i').classList.add('fa-bars'); menuToggle.querySelector('i').classList.remove('fa-times'); } }));
-    document.getElementById('homeLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-6.5,112.5],9); });
-    document.getElementById('trackLink').addEventListener('click', (e) => { e.preventDefault(); if(currentRoutePoints.length) map.fitBounds(currentRoutePoints); });
-    document.getElementById('portsLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-7.13,112.655],15); });
-    
-    // Tombol Toggle Mode (Satelit <-> Batimetri)
-    const bathyToggle = document.getElementById('bathyToggleBtn');
-    bathyToggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggleBathyMode();
-    });
-    
-    const exportPng = async () => { showToastMsg("Memproses gambar..."); const canvas = await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true }); const link = document.createElement('a'); link.download = 'sea_route.png'; link.href = canvas.toDataURL(); link.click(); showToastMsg("✅ PNG berhasil"); };
-    const exportPdf = async () => { showToastMsg("Menyusun PDF..."); const canvas = await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }); const pdfWidth = pdf.internal.pageSize.getWidth(); const imgHeight = (canvas.height * pdfWidth) / canvas.width; pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight); pdf.save('sea_route_report.pdf'); showToastMsg("📄 PDF sukses"); };
-    document.getElementById('exportPngNav').addEventListener('click', exportPng);
-    document.getElementById('exportPdfNav').addEventListener('click', exportPdf);
+    clearBtn.addEventListener('click',()=>{ searchInput.value=''; clearBtn.style.display='none'; resultsDiv.classList.remove('show'); searchInput.focus(); });
+    document.addEventListener('click',(e)=>{ if(!document.querySelector('.search-container').contains(e.target)) resultsDiv.classList.remove('show'); });
+    const menuToggle=document.getElementById('menuToggle'), navMenu=document.getElementById('navMenu');
+    menuToggle.addEventListener('click',()=>{ navMenu.classList.toggle('active'); const ic=menuToggle.querySelector('i'); ic.classList.toggle('fa-bars'); ic.classList.toggle('fa-times'); });
+    document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(btn=>btn.addEventListener('click',()=>{ if(window.innerWidth<=768){ navMenu.classList.remove('active'); menuToggle.querySelector('i').classList.add('fa-bars'); menuToggle.querySelector('i').classList.remove('fa-times'); } }));
+    document.getElementById('homeLink').addEventListener('click',(e)=>{ e.preventDefault(); map.setView([-6.5,112.5],9); showToastMsg("Peta utama"); });
+    document.getElementById('trackLink').addEventListener('click',(e)=>{ e.preventDefault(); if(currentRoutePoints?.length) map.fitBounds(currentRoutePoints); else showToastMsg("Tidak ada rute aktif"); });
+    document.getElementById('portsLink').addEventListener('click',(e)=>{ e.preventDefault(); map.setView([-7.13,112.655],15); showToastMsg("Area Pelabuhan Gresik"); });
+    document.getElementById('bathyToggleBtn').addEventListener('click',(e)=>{ e.preventDefault(); toggleBathyMode(); });
+    const exportPng=async()=>{ showToastMsg("Mengambil screenshot..."); const canvas=await html2canvas(document.getElementById('exportContainer'),{scale:2.8,useCORS:true}); const link=document.createElement('a'); link.download='sea_route_map.png'; link.href=canvas.toDataURL(); link.click(); showToastMsg("✅ PNG tersimpan"); };
+    const exportPdf=async()=>{ showToastMsg("Membuat PDF..."); const canvas=await html2canvas(document.getElementById('exportContainer'),{scale:2.8,useCORS:true}); const imgData=canvas.toDataURL('image/png'); const {jsPDF}=window.jspdf; const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'}); const pdfWidth=pdf.internal.pageSize.getWidth(); const imgHeight=(canvas.height*pdfWidth)/canvas.width; pdf.addImage(imgData,'PNG',0,0,pdfWidth,imgHeight); pdf.save('sea_route_report.pdf'); showToastMsg("📄 PDF berhasil diekspor"); };
+    document.getElementById('exportPngNav').addEventListener('click',exportPng);
+    document.getElementById('exportPdfNav').addEventListener('click',exportPdf);
   }
 
-  (async () => {
-    await loadExternalData();
-    initMap();
-    setupInteractions();
-    setTimeout(() => map.invalidateSize(), 200);
-  })();
+  (async()=>{ await loadExternalData(); initMap(); setupInteractions(); setTimeout(()=>map.invalidateSize(),250); })();
 </script>
 </body>
 </html>
