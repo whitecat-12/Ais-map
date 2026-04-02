@@ -61,7 +61,6 @@
       gap: 14px;
     }
 
-    /* ICON UTAMA LEBIH BESAR */
     .logo-icon {
       font-size: 2.2rem;
       color: #1e5f7a;
@@ -126,6 +125,23 @@
       background: #e3f0f5;
       color: #0f5b7a;
       transform: translateY(-2px);
+    }
+
+    /* Tombol mode batimetri spesifik */
+    .btn-bathy-toggle {
+      background: #eef2f7;
+      border-radius: 44px;
+      padding: 8px 20px;
+    }
+    .btn-bathy-toggle.active {
+      background: #1e5f7a;
+      color: white;
+    }
+    .btn-bathy-toggle.active i {
+      color: white;
+    }
+    .btn-bathy-toggle i {
+      transition: 0.2s;
     }
 
     .btn-pdf-nav {
@@ -342,11 +358,12 @@
       color: #c2e0fa;
     }
 
-    /* Legend Section inside Vessel Card */
+    /* Legend Section inside Vessel Card (hanya ditampilkan saat mode batimetri aktif) */
     .card-legend-section {
       margin-top: 14px;
       padding-top: 10px;
       border-top: 1px solid rgba(107, 194, 232, 0.5);
+      transition: opacity 0.2s;
     }
 
     .card-legend-title {
@@ -425,7 +442,7 @@
       display: none !important;
     }
 
-    /* RESPONSIVE: Tablet & Mobile - header lebih adaptif, search tetap aman */
+    /* RESPONSIVE: Tablet & Mobile - header tetap adaptif */
     @media (max-width: 1024px) {
       .nav-container {
         padding: 0.8rem 1.5rem;
@@ -493,7 +510,6 @@
       .nav-menu li button i {
         font-size: 1.4rem;
       }
-      /* search container lebih lebar di mobile, tidak ketutupan menu karena posisi fixed */
       .search-container {
         top: 78px;
         right: 12px;
@@ -625,6 +641,8 @@
       <li><a href="#" id="homeLink"><i class="fas fa-map-marked-alt"></i> <span>Dashboard</span></a></li>
       <li><a href="#" id="trackLink"><i class="fas fa-route"></i> <span>Live Track</span></a></li>
       <li><a href="#" id="portsLink"><i class="fas fa-anchor"></i> <span>Pelabuhan</span></a></li>
+      <!-- TOMBOL BARU: BATHYMETRY TOGGLE (mode batimetri on/off) -->
+      <li><button id="bathyToggleBtn" class="btn-bathy-toggle active"><i class="fas fa-water"></i> <span>Mode Batimetri</span></button></li>
       <li><button id="exportPngNav" class="btn-png-nav"><i class="fas fa-camera"></i> <span>PNG</span></button></li>
       <li><button id="exportPdfNav" class="btn-pdf-nav"><i class="fas fa-file-pdf"></i> <span>PDF</span></button></li>
     </ul>
@@ -636,7 +654,7 @@
   </div>
 </nav>
 
-<!-- Search Bar - posisi lebih aman dan jelas -->
+<!-- Search Bar -->
 <div class="search-container">
   <div class="search-wrapper">
     <div class="search-input-group">
@@ -665,8 +683,8 @@
         <i class="far fa-calendar-alt"></i> <span id="displayLastBerthing">-</span>
       </div>
       
-      <!-- LEGEND KEDALAMAN LAUT (SATU-SATUNYA) -->
-      <div class="card-legend-section">
+      <!-- LEGEND KEDALAMAN LAUT - HANYA MUNCUL SAAT BATIMETRI AKTIF -->
+      <div class="card-legend-section" id="bathyLegend">
         <div class="card-legend-title">
           <i class="fas fa-water"></i> KEDALAMAN LAUT
         </div>
@@ -697,7 +715,6 @@
   </div>
 </div>
 
-<!-- Clean info badge -->
 <div class="info-badge">
   <i class="fas fa-map"></i> Sea Route | Maritime Tracking
 </div>
@@ -706,12 +723,18 @@
   // Konfigurasi
   const MAPTILER_API_KEY = "xA9ASc2cIMEtQlXrHu2L";
   const BATHYMETRY_TILE_URL = `https://api.maptiler.com/tiles/terrain-rgb/{z}/{x}/{y}.png?key=${MAPTILER_API_KEY}`;
+  // Tile satellite default (map satellite from maptiler - hybrid/satellite)
+  const SATELLITE_TILE_URL = `https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${MAPTILER_API_KEY}`;
 
   let vesselsDatabase = [];
   let currentVessel = null;
   let map, ship, currentPolyline, currentSmoothCoords = [];
   let shipAnimationInterval = null;
   let currentRoutePoints = [];
+  
+  // Tile layer references
+  let currentTileLayer = null;
+  let bathyModeActive = true;   // default mode batimetri aktif
 
   // Helper
   function showLoading() {
@@ -727,6 +750,40 @@
     t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
     document.body.appendChild(t);
     setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2600);
+  }
+
+  // Fungsi mengganti layer peta sesuai mode batimetri
+  function setMapLayerMode(enableBathy) {
+    if (currentTileLayer) {
+      map.removeLayer(currentTileLayer);
+    }
+    if (enableBathy) {
+      currentTileLayer = L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom: 14, minZoom: 4, tileSize: 512, zoomOffset: -1, attribution: '' });
+      showToastMsg("🌊 Mode Batimetri AKTIF (peta kedalaman laut)");
+    } else {
+      currentTileLayer = L.tileLayer(SATELLITE_TILE_URL, { maxZoom: 18, minZoom: 4, attribution: '' });
+      showToastMsg("🛰️ Mode Satelit AKTIF (default satellite map)");
+    }
+    currentTileLayer.addTo(map);
+  }
+
+  // Toggle mode batimetri dan perbarui tombol serta legend
+  function toggleBathyMode() {
+    bathyModeActive = !bathyModeActive;
+    setMapLayerMode(bathyModeActive);
+    const toggleBtn = document.getElementById('bathyToggleBtn');
+    const legendDiv = document.getElementById('bathyLegend');
+    if (bathyModeActive) {
+      toggleBtn.innerHTML = '<i class="fas fa-water"></i> <span>Mode Batimetri ON</span>';
+      toggleBtn.classList.add('active');
+      if (legendDiv) legendDiv.style.display = 'block';
+    } else {
+      toggleBtn.innerHTML = '<i class="fas fa-satellite"></i> <span>Mode Satelit OFF</span>';
+      toggleBtn.classList.remove('active');
+      if (legendDiv) legendDiv.style.display = 'none';
+    }
+    // sedikit refresh tampilan supaya tidak terjadi artefak
+    if (map) map.invalidateSize();
   }
 
   // Data Loading
@@ -794,7 +851,10 @@
 
   function initMap() {
     map = L.map('map', { attributionControl: false }).setView([-6.5, 112.5], 9);
-    L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom: 14, minZoom: 4, tileSize: 512, zoomOffset: -1 }).addTo(map);
+    // Inisialisasi tile layer berdasarkan mode awal (bathy true)
+    currentTileLayer = L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom: 14, minZoom: 4, tileSize: 512, zoomOffset: -1 });
+    currentTileLayer.addTo(map);
+    
     const shipIcon = L.divIcon({ html: '<div style="font-size:36px;">⛴️</div>', iconSize: [40, 40], popupAnchor: [0, -20] });
     ship = L.marker([0, 0], { icon: shipIcon }).addTo(map);
     const dock1 = [[-7.1321,112.6548],[-7.1342,112.6554],[-7.1340,112.6561],[-7.1319,112.6555]];
@@ -806,6 +866,14 @@
       updateVesselCard(currentVessel);
       updateRoute(currentVessel);
       ship.bindPopup(`<b>${currentVessel.name}</b><br>${currentVessel.type}`);
+    }
+    // Pastikan legend sesuai kondisi awal (batimetri aktif)
+    const legendDiv = document.getElementById('bathyLegend');
+    if (legendDiv) legendDiv.style.display = 'block';
+    const toggleBtn = document.getElementById('bathyToggleBtn');
+    if (toggleBtn) {
+      toggleBtn.innerHTML = '<i class="fas fa-water"></i> <span>Mode Batimetri ON</span>';
+      toggleBtn.classList.add('active');
     }
   }
 
@@ -836,6 +904,14 @@
     document.getElementById('homeLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-6.5,112.5],9); });
     document.getElementById('trackLink').addEventListener('click', (e) => { e.preventDefault(); if(currentRoutePoints.length) map.fitBounds(currentRoutePoints); });
     document.getElementById('portsLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-7.13,112.655],15); });
+    
+    // Tombol Toggle Mode Batimetri
+    const bathyToggle = document.getElementById('bathyToggleBtn');
+    bathyToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleBathyMode();
+    });
+    
     const exportPng = async () => { showToastMsg("Memproses gambar..."); const canvas = await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true }); const link = document.createElement('a'); link.download = 'sea_route.png'; link.href = canvas.toDataURL(); link.click(); showToastMsg("✅ PNG berhasil"); };
     const exportPdf = async () => { showToastMsg("Menyusun PDF..."); const canvas = await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }); const pdfWidth = pdf.internal.pageSize.getWidth(); const imgHeight = (canvas.height * pdfWidth) / canvas.width; pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight); pdf.save('sea_route_report.pdf'); showToastMsg("📄 PDF sukses"); };
     document.getElementById('exportPngNav').addEventListener('click', exportPng);
