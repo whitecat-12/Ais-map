@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <title>Sea Route | Smart Maritime Tracking - GEBCO Bathymetry</title>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  
+  <title>Sea Route | Smart Maritime Tracking - Precision Maritime</title>
+
   <!-- Leaflet CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  
+
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
+
   <!-- html2canvas & jspdf -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
       background: #e8f0f5;
@@ -30,7 +30,8 @@
       height: 100vh;
       width: 100vw;
     }
-    
+
+    /* ========== NAVBAR RESPONSIF (DIOPTIMALKAN) ========== */
     .navbar {
       position: fixed;
       top: 0;
@@ -42,132 +43,233 @@
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       border-bottom: 2px solid #2c7da0;
     }
-    
+
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0.7rem 1.8rem;
+      padding: 0.7rem 1.2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
       gap: 1rem;
+      position: relative;
     }
-    
+
+    /* Logo area */
     .logo-area {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-shrink: 0;
     }
-    
+
     .logo-icon {
       font-size: 1.6rem;
       color: #1e5f7a;
     }
-    
+
     .brand-text {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #0a4b6e;
+      line-height: 1.2;
     }
-    
+
     .brand-sub {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: #5a7d9a;
-      margin-left: 5px;
+      display: block;
+      margin-top: 2px;
     }
-    
+
+    /* Menu utama - desktop */
     .nav-menu {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
       list-style: none;
       margin: 0;
       padding: 0;
+      transition: all 0.3s ease;
     }
-    
-    .nav-menu li a, .nav-menu li button {
+
+    .nav-menu li a,
+    .nav-menu li button {
       text-decoration: none;
       color: #1e4663;
       font-weight: 500;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: 0.2s;
       display: flex;
       align-items: center;
       gap: 8px;
       padding: 6px 14px;
-      border-radius: 30px;
+      border-radius: 40px;
       background: none;
       border: none;
       cursor: pointer;
       font-family: inherit;
-      width: 100%;
+      white-space: nowrap;
     }
-    
-    .nav-menu li a i, .nav-menu li button i {
+
+    .nav-menu li a i,
+    .nav-menu li button i {
       font-size: 1rem;
       color: #2c7da0;
     }
-    
-    .nav-menu li a:hover, .nav-menu li button:hover {
+
+    .nav-menu li a:hover,
+    .nav-menu li button:hover {
       background: #e3f0f5;
       color: #0f5b7a;
     }
-    
-    /* Tombol Toggle Map Style */
-    .map-toggle-btn {
-      background: #1e5f7a !important;
-      color: white !important;
-      border-radius: 30px !important;
-      padding: 6px 16px !important;
-    }
-    .map-toggle-btn i {
-      color: white !important;
-    }
-    .map-toggle-btn:hover {
-      background: #0f4b62 !important;
-    }
-    
-    .nav-menu .btn-pdf-nav {
+
+    .btn-pdf-nav {
       color: #b91c1c;
     }
-    
-    .nav-menu .btn-pdf-nav i {
+    .btn-pdf-nav i {
       color: #b91c1c;
     }
-    
-    .nav-menu .btn-png-nav {
+    .btn-png-nav {
       color: #0a6b8c;
     }
-    
-    .nav-menu .btn-png-nav i {
+    .btn-png-nav i {
       color: #0a6b8c;
     }
-    
-    .nav-menu .btn-pdf-nav:hover {
+    .btn-pdf-nav:hover {
       background: #ffe6e6;
     }
-    
-    .nav-menu .btn-png-nav:hover {
+    .btn-png-nav:hover {
       background: #ddf4fc;
     }
-    
+
+    /* Tombol hamburger (mobile) */
     .menu-toggle {
       display: none;
-      font-size: 1.6rem;
       background: none;
       border: none;
+      font-size: 1.7rem;
       color: #1e5f7a;
       cursor: pointer;
-      padding: 6px 10px;
+      padding: 6px 12px;
       border-radius: 40px;
       transition: 0.2s;
+      margin-left: auto;
     }
-    
     .menu-toggle:hover {
       background: #e3f0f5;
     }
-    
+
+    /* Right actions wrapper untuk menjaga fleksibilitas */
+    .right-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    /* ========== RESPONSIVE BREAKPOINT (HEADER) ========== */
+    @media (max-width: 850px) {
+      .nav-container {
+        padding: 0.6rem 1rem;
+      }
+      .brand-text {
+        font-size: 1.1rem;
+      }
+      .logo-icon {
+        font-size: 1.4rem;
+      }
+      .nav-menu li a,
+      .nav-menu li button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      /* Menu mobile: muncul dari kanan */
+      .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 280px;
+        height: 100vh;
+        background: #FFFFFF;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 80px 1.5rem 2rem;
+        gap: 1.2rem;
+        transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+        z-index: 1050;
+        border-left: 3px solid #2c7da0;
+        overflow-y: auto;
+      }
+      
+      .nav-menu.active {
+        right: 0;
+      }
+      
+      .nav-menu li {
+        width: 100%;
+      }
+      
+      .nav-menu li a,
+      .nav-menu li button {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 12px 16px;
+        font-size: 1rem;
+        border-radius: 50px;
+      }
+      
+      .nav-menu li a i,
+      .nav-menu li button i {
+        width: 28px;
+        font-size: 1.2rem;
+      }
+      
+      /* Overlay gelap saat menu aktif (opsional) */
+      .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.2s;
+      }
+      .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    /* Untuk tablet kecil dan mobile landscape */
+    @media (max-width: 480px) {
+      .nav-container {
+        padding: 0.5rem 0.9rem;
+      }
+      .brand-text {
+        font-size: 1rem;
+      }
+      .logo-icon {
+        font-size: 1.3rem;
+      }
+      .brand-sub {
+        font-size: 0.55rem;
+      }
+    }
+
     /* SEARCH BAR */
     .search-container {
       position: fixed;
@@ -178,7 +280,7 @@
       max-width: calc(100% - 40px);
       transition: all 0.3s ease;
     }
-    
+
     .search-wrapper {
       background: rgba(8, 22, 33, 0.95);
       backdrop-filter: blur(12px);
@@ -186,19 +288,19 @@
       border: 1px solid rgba(59, 155, 203, 0.5);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
-    
+
     .search-input-group {
       display: flex;
       align-items: center;
       padding: 4px 8px 4px 18px;
       gap: 8px;
     }
-    
+
     .search-input-group i {
       color: #6bc2e8;
       font-size: 1rem;
     }
-    
+
     .search-input {
       flex: 1;
       background: transparent;
@@ -209,12 +311,12 @@
       outline: none;
       font-family: inherit;
     }
-    
+
     .search-input::placeholder {
       color: #8fcbe8;
       opacity: 0.7;
     }
-    
+
     .search-clear {
       background: none;
       border: none;
@@ -222,13 +324,14 @@
       cursor: pointer;
       padding: 8px;
       border-radius: 50%;
+      transition: 0.2s;
       display: none;
     }
-    
+
     .search-clear:hover {
       background: rgba(255, 255, 255, 0.1);
     }
-    
+
     .search-results {
       max-height: 0;
       overflow: hidden;
@@ -239,27 +342,23 @@
       margin-top: 8px;
       border: 1px solid rgba(59, 155, 203, 0.3);
     }
-    
+
     .search-results.show {
       max-height: 400px;
       overflow-y: auto;
     }
-    
+
     .result-item {
       padding: 12px 16px;
       border-bottom: 1px solid rgba(59, 155, 203, 0.2);
       cursor: pointer;
       transition: 0.2s;
     }
-    
+
     .result-item:hover {
       background: rgba(59, 155, 203, 0.2);
     }
-    
-    .result-item:last-child {
-      border-bottom: none;
-    }
-    
+
     .result-name {
       font-weight: 600;
       color: #6bc2e8;
@@ -268,7 +367,7 @@
       align-items: center;
       gap: 8px;
     }
-    
+
     .result-details {
       font-size: 0.75rem;
       color: #9dcfec;
@@ -276,61 +375,15 @@
       gap: 16px;
       flex-wrap: wrap;
     }
-    
+
     .no-result {
       padding: 16px;
       text-align: center;
       color: #9dcfec;
       font-size: 0.85rem;
     }
-    
-    @media (max-width: 768px) {
-      .search-container {
-        top: 70px;
-        right: 12px;
-        left: 12px;
-        width: auto;
-      }
-      .search-wrapper {
-        border-radius: 40px;
-      }
-      .search-input-group {
-        padding: 2px 8px 2px 16px;
-      }
-      .search-input {
-        padding: 10px 0;
-        font-size: 0.85rem;
-      }
-      .result-details {
-        gap: 12px;
-        font-size: 0.7rem;
-      }
-    }
-    
-    .app-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-    
-    #exportContainer {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-    
-    #map {
-      height: 100vh;
-      width: 100%;
-      z-index: 1;
-    }
-    
-    .leaflet-control-attribution {
-      display: none !important;
-    }
-    
+
+    /* Vessel Data Card */
     .vessel-data-card {
       position: fixed;
       bottom: 20px;
@@ -346,9 +399,8 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
       pointer-events: none;
       max-width: 340px;
-      width: auto;
     }
-    
+
     .vessel-data-card h4 {
       margin: 0 0 8px 0;
       font-size: 13px;
@@ -357,32 +409,27 @@
       gap: 8px;
       color: #6bc2e8;
     }
-    
-    .vessel-data-card .data-grid {
+
+    .data-grid {
       display: grid;
       grid-template-columns: auto 1fr;
       gap: 6px 14px;
-      margin-top: 6px;
       font-size: 11px;
     }
-    
-    .vessel-data-card .label {
+
+    .label {
       font-weight: 600;
       color: #8fcbe8;
-      font-size: 11px;
-      white-space: nowrap;
     }
-    
-    .vessel-data-card .value {
+
+    .value {
       font-weight: 500;
       font-family: monospace;
-      font-size: 11px;
       text-align: right;
-      word-break: break-word;
       color: #ffffff;
     }
-    
-    .vessel-data-card .data-row {
+
+    .data-row {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
@@ -392,7 +439,45 @@
       padding-top: 6px;
       color: #9dcfec;
     }
-    
+
+    /* Legend Section inside Vessel Card */
+    .card-legend-section {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(107, 194, 232, 0.4);
+    }
+
+    .card-legend-title {
+      font-size: 10px;
+      font-weight: 600;
+      color: #6bc2e8;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      row-gap: 6px;
+    }
+
+    .card-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      color: #cbd5e6;
+    }
+
+    .card-legend-color {
+      width: 16px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
     .info-badge {
       position: fixed;
       bottom: 20px;
@@ -410,119 +495,58 @@
       align-items: center;
       gap: 6px;
     }
-    
-    .bathymetry-legend {
-      position: fixed;
-      bottom: 20px;
-      right: 140px;
-      background: rgba(8, 22, 33, 0.9);
-      backdrop-filter: blur(8px);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 10px;
-      color: #eef4ff;
-      z-index: 900;
-      pointer-events: none;
-      font-family: monospace;
-      border-right: 3px solid #2c7da0;
-      line-height: 1.4;
-      transition: opacity 0.2s;
+
+    /* Map */
+    .app-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
     }
-    
-    .bathymetry-legend span {
-      display: inline-block;
-      width: 20px;
-      height: 12px;
-      margin-right: 6px;
-      border-radius: 2px;
+
+    #exportContainer {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
     }
-    
-    /* Mode indicator */
-    .mode-indicator {
-      position: fixed;
-      top: 90px;
-      left: 20px;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(8px);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      color: #eef4ff;
-      z-index: 950;
-      font-family: monospace;
-      pointer-events: none;
-      border-left: 3px solid #3b9bcb;
+
+    #map {
+      height: 100vh;
+      width: 100%;
+      z-index: 1;
     }
-    
+
+    .leaflet-control-attribution {
+      display: none !important;
+    }
+
+    /* Responsive tambahan untuk card & search */
     @media (max-width: 768px) {
-      .nav-container {
-        padding: 0.6rem 1rem;
-      }
-      .brand-text {
-        font-size: 1.1rem;
-      }
-      .logo-icon {
-        font-size: 1.3rem;
-      }
-      .brand-sub {
-        font-size: 0.6rem;
-      }
-      .menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -280px;
-        width: 260px;
-        height: 100vh;
-        background: #FFFFFF;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 80px 1.5rem 1.5rem;
-        gap: 1rem;
-        transition: 0.3s ease;
-        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
-        z-index: 999;
-        border-left: 3px solid #2c7da0;
-        margin: 0;
-      }
-      .nav-menu.active {
-        right: 0;
-      }
-      .nav-menu li a, .nav-menu li button {
-        width: 100%;
-        padding: 10px 0;
-        font-size: 1rem;
-        justify-content: flex-start;
+      .search-container {
+        top: 70px;
+        right: 12px;
+        left: 12px;
+        width: auto;
       }
       .vessel-data-card {
         bottom: 70px;
         left: 12px;
-        max-width: 270px;
-        padding: 8px 14px;
-      }
-      .bathymetry-legend {
-        bottom: 20px;
-        right: 12px;
-        font-size: 8px;
-        padding: 6px 10px;
+        max-width: 280px;
       }
       .info-badge {
         bottom: 16px;
         right: 12px;
         font-size: 9px;
-        padding: 4px 12px;
       }
-      .mode-indicator {
-        top: 75px;
-        left: 12px;
-        font-size: 9px;
+      .card-legend-items {
+        gap: 8px;
+      }
+      .card-legend-item {
+        font-size: 8px;
       }
     }
-    
+
     .export-toast {
       position: fixed;
       bottom: 90px;
@@ -540,18 +564,18 @@
       backdrop-filter: blur(8px);
       white-space: nowrap;
     }
-    
+
     .leaflet-popup-content-wrapper {
       background: #0a1a24 !important;
       color: #eef4ff !important;
       border-radius: 16px !important;
       border-left: 3px solid #3b9bcb !important;
     }
-    
+
     .leaflet-popup-tip {
       background: #0a1a24 !important;
     }
-    
+
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -567,7 +591,7 @@
       gap: 15px;
       color: white;
     }
-    
+
     .loading-spinner {
       width: 50px;
       height: 50px;
@@ -576,7 +600,7 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -591,19 +615,17 @@
       <i class="fas fa-water logo-icon"></i>
       <div>
         <span class="brand-text">Sea Route</span>
-        <span class="brand-sub">GEBCO bathymetry • precision maritime</span>
+        <span class="brand-sub">precision maritime</span>
       </div>
     </div>
-    
+    <!-- Menu navigasi utama -->
     <ul class="nav-menu" id="navMenu">
       <li><a href="#" id="homeLink"><i class="fas fa-map-marked-alt"></i> <span>Dashboard</span></a></li>
       <li><a href="#" id="trackLink"><i class="fas fa-route"></i> <span>Live Track</span></a></li>
       <li><a href="#" id="portsLink"><i class="fas fa-anchor"></i> <span>Pelabuhan</span></a></li>
-      <li><button id="toggleMapModeBtn" class="map-toggle-btn"><i class="fas fa-layer-group"></i> <span id="toggleBtnText">Mode Normal</span></button></li>
       <li><button id="exportPngNav" class="btn-png-nav"><i class="fas fa-camera"></i> <span>PNG</span></button></li>
       <li><button id="exportPdfNav" class="btn-pdf-nav"><i class="fas fa-file-pdf"></i> <span>PDF</span></button></li>
     </ul>
-    
     <div class="right-actions">
       <button class="menu-toggle" id="menuToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
@@ -611,8 +633,10 @@
     </div>
   </div>
 </nav>
+<!-- Overlay untuk menutup menu di mobile -->
+<div id="menuOverlay" class="menu-overlay"></div>
 
-<!-- SEARCH BAR -->
+<!-- Search Bar -->
 <div class="search-container">
   <div class="search-wrapper">
     <div class="search-input-group">
@@ -627,7 +651,6 @@
 <div class="app-wrapper">
   <div id="exportContainer">
     <div id="map"></div>
-    
     <div class="vessel-data-card" id="vesselDataCard">
       <h4><i class="fas fa-ship"></i> AIS • ACTIVE VESSEL</h4>
       <div class="data-grid">
@@ -641,90 +664,92 @@
       <div class="data-row">
         <i class="far fa-calendar-alt"></i> <span id="displayLastBerthing">-</span>
       </div>
+      
+      <!-- LEGEND KEDALAMAN LAUT -->
+      <div class="card-legend-section">
+        <div class="card-legend-title">
+          <i class="fas fa-water"></i> KEDALAMAN LAUT
+        </div>
+        <div class="card-legend-items">
+          <div class="card-legend-item">
+            <div class="card-legend-color" style="background: #b3e2fa;"></div>
+            <span>0-20m</span>
+          </div>
+          <div class="card-legend-item">
+            <div class="card-legend-color" style="background: #7bc5e8;"></div>
+            <span>20-50m</span>
+          </div>
+          <div class="card-legend-item">
+            <div class="card-legend-color" style="background: #4f9fd6;"></div>
+            <span>50-100m</span>
+          </div>
+          <div class="card-legend-item">
+            <div class="card-legend-color" style="background: #2c6e9e;"></div>
+            <span>100-200m</span>
+          </div>
+          <div class="card-legend-item">
+            <div class="card-legend-color" style="background: #0b3b5f;"></div>
+            <span>>200m</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="info-badge" id="infoBadge">
-  <i class="fas fa-water"></i> <span id="mapModeText">Mode: GEBCO Bathymetry</span>
-</div>
-<div class="mode-indicator" id="modeIndicator">
-  🗺️ <span id="indicatorText">GEBCO Bathymetry Aktif</span>
-</div>
-<div class="bathymetry-legend" id="bathyLegend">
-  <strong>📊 GEBCO KEDALAMAN LAUT</strong><br>
-  <span style="background: #001f3f;"></span> >3000m (abyssal)<br>
-  <span style="background: #0b3b5f;"></span> 2000-3000m<br>
-  <span style="background: #1e6a8c;"></span> 1000-2000m<br>
-  <span style="background: #3c9bcb;"></span> 200-1000m<br>
-  <span style="background: #7bc5e8;"></span> 50-200m<br>
-  <span style="background: #b3e2fa;"></span> 0-50m (shelf)
+<div class="info-badge">
+  <i class="fas fa-map"></i> Sea Route | Maritime Tracking
 </div>
 
 <script>
-  // Menggunakan data bathymetry dari GEBCO (General Bathymetric Chart of the Oceans)
-  // MapTiler menyediakan tile layer berbasis data GEBCO dengan skema warna bathymetry yang akurat
-  // URL ini menggunakan dataset bathymetry GEBCO yang dikombinasikan dengan elevation terrain
+  // Konfigurasi
   const MAPTILER_API_KEY = "xA9ASc2cIMEtQlXrHu2L";
-  // GEBCO Bathymetry layer - menggunakan tileset bathymetry khusus yang menampilkan kedalaman laut berdasarkan data GEBCO
-  const GEBCO_BATHYMETRY_URL = `https://api.maptiler.com/tiles/bathymetry/{z}/{x}/{y}.png?key=${MAPTILER_API_KEY}`;
-  // Layer normal OSM untuk perbandingan
-  const NORMAL_TILE_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  
-  // Global variables
+  const BATHYMETRY_TILE_URL = `https://api.maptiler.com/tiles/terrain-rgb/{z}/{x}/{y}.png?key=${MAPTILER_API_KEY}`;
+
   let vesselsDatabase = [];
   let currentVessel = null;
   let map, ship, currentPolyline, currentSmoothCoords = [];
   let shipAnimationInterval = null;
   let currentRoutePoints = [];
-  
-  // Layer references
-  let normalTileLayer;
-  let gebcoBathymetryLayer;
-  let currentBaseLayer = null;
-  let isBathymetryMode = true; // default GEBCO bathymetry aktif
-  
+
   function showLoading() {
     const overlay = document.createElement('div');
     overlay.id = 'loadingOverlay';
     overlay.className = 'loading-overlay';
-    overlay.innerHTML = `<div class="loading-spinner"></div><div><i class="fas fa-ship"></i> Memuat data maritim & GEBCO bathymetry...</div><div style="font-size:11px;">General Bathymetric Chart of the Oceans</div>`;
+    overlay.innerHTML = `<div class="loading-spinner"></div><div><i class="fas fa-ship"></i> Memuat data maritim...</div>`;
     document.body.appendChild(overlay);
   }
-  
-  function hideLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.remove();
+  function hideLoading() { const el = document.getElementById('loadingOverlay'); if (el) el.remove(); }
+  function showToastMsg(msg) {
+    const t = document.createElement('div'); t.className = 'export-toast';
+    t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2500);
   }
-  
+
   async function loadExternalData() {
     try {
       showLoading();
       const response = await fetch('data/maritime_data.json');
-      if (!response.ok) throw new Error('Failed');
+      if (!response.ok) throw new Error();
       const data = await response.json();
       vesselsDatabase = data.vessels;
-      return true;
     } catch (error) {
       vesselsDatabase = getFallbackData();
-      showToastMsg("⚠️ Menggunakan data lokal (fallback)");
-      return false;
+      showToastMsg("⚠️ Menggunakan data lokal (fallback) - JSON tidak ditemukan");
     } finally {
       hideLoading();
     }
   }
-  
+
   function getFallbackData() {
     return [
-      { mmsi: 525113036, name: "Lumoso Sahabat", type: "Bulk Carrier", length: 196, draft: 8.6, last_berthing: "2026-01-06", visit_count: 6, cargo: "smelting_material",
-        route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
-      { mmsi: 525012145, name: "Petro Ocean Ill", type: "Bunkering Tanker", length: 110, draft: 5.2, last_berthing: "2025-12-31", visit_count: 1, cargo: "fuel_oil",
-        route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
-      { mmsi: 525121084, name: "Amolongo Emran", type: "Bulk Carrier", length: 196, draft: 6.9, last_berthing: "2025-12-25", visit_count: 5, cargo: "copper_concentrate",
-        route: [[-6.1023,112.0715],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1337,112.6555]] }
+      { mmsi: 525113036, name: "Lumoso Sahabat", type: "Bulk Carrier", length: 196, width: 36, draft: 8.6, last_berthing: "2026-01-06", visit_count: 6, cargo: "smelting_material", route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
+      { mmsi: 525012145, name: "Petro Ocean Ill", type: "Bunkering Tanker", length: 110, width: 18, draft: 5.2, last_berthing: "2025-12-31", visit_count: 1, cargo: "fuel_oil", route: [[-6.1023,112.0715],[-6.1351,112.2308],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2225,112.8735],[-6.2143,113.0191],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.1322,112.6551],[-7.1329,112.6553],[-7.1337,112.6555]] },
+      { mmsi: 525121084, name: "Amolongo Emran", type: "Bulk Carrier", length: 196, width: 36, draft: 6.9, last_berthing: "2025-12-25", visit_count: 5, cargo: "copper_concentrate", route: [[-6.1023,112.0715],[-6.1924,112.4011],[-6.2197,112.5659],[-6.2279,112.6950],[-6.2143,113.0191],[-6.2170,113.1345],[-6.2552,113.2196],[-6.3262,113.2855],[-6.4518,113.2800],[-6.5336,113.2471],[-6.6128,113.1674],[-6.6673,113.0960],[-6.7110,113.0191],[-6.7437,112.9422],[-6.7764,112.8680],[-6.8010,112.8104],[-6.8419,112.7705],[-6.8801,112.7307],[-6.9251,112.6998],[-6.9476,112.6826],[-6.9810,112.6703],[-7.0321,112.6641],[-7.0540,112.6639],[-7.0639,112.6636],[-7.0730,112.6622],[-7.0835,112.6622],[-7.0932,112.6619],[-7.0998,112.6622],[-7.1066,112.6634],[-7.1125,112.6632],[-7.1175,112.6620],[-7.1209,112.6607],[-7.1227,112.6593],[-7.1253,112.6579],[-7.1275,112.6568],[-7.1291,112.6560],[-7.1306,112.6554],[-7.1317,112.6551],[-7.1322,112.6551],[-7.1337,112.6555]] }
     ];
   }
-  
+
   function smoothLine(points, resolution = 20) {
     const smooth = [];
     for (let i = 0; i < points.length - 1; i++) {
@@ -737,33 +762,25 @@
     smooth.push(points[points.length-1]);
     return smooth;
   }
-  
-  function updateVesselCardWithData(vessel) {
+
+  function updateVesselCard(vessel) {
     document.getElementById('displayMMSI').innerText = vessel.mmsi || '-';
     document.getElementById('displayName').innerHTML = `<i class="fas fa-ship"></i> ${vessel.name || '-'}`;
     document.getElementById('displayLength').innerText = vessel.length ? `${vessel.length} m` : '-';
     document.getElementById('displayDraft').innerText = vessel.draft ? `${vessel.draft} m` : '-';
     document.getElementById('displayType').innerText = vessel.type || '-';
     document.getElementById('displayCargo').innerText = vessel.cargo ? vessel.cargo.replace(/_/g, ' ') : '-';
-    document.getElementById('displayLastBerthing').innerHTML = `Last: ${vessel.last_berthing || '-'} | Visit: ${vessel.visit_count || 0}x`;
+    document.getElementById('displayLastBerthing').innerHTML = `<i class="far fa-calendar-alt"></i> Last Berthing: ${vessel.last_berthing || '-'} | Visit: ${vessel.visit_count || 0}x`;
   }
-  
-  function updateShipPopup(vessel) {
-    const content = `<div style="min-width:240px;"><b style="color:#6bc2e8;">🛳️ VESSEL DETAIL</b><hr>\(\)${[['Nama',vessel.name],['MMSI',vessel.mmsi],['Panjang',vessel.length+' m'],['Draft',vessel.draft? vessel.draft+' m':'N/A'],['Tipe',vessel.type],['Kargo',vessel.cargo?.replace(/_/g,' ')||'-']].map(r=>`<tr><td style="font-weight:bold;">${r[0]}:</td><td style="text-align:right;">${r[1]}</td></tr>`).join('')}</table></div>`;
-    if (ship) { ship.unbindPopup(); ship.bindPopup(content); }
-  }
-  
-  function updateRouteForVessel(vessel) {
+
+  function updateRoute(vessel) {
     if (!vessel?.route?.length) return;
     currentRoutePoints = vessel.route;
     if (currentPolyline) map.removeLayer(currentPolyline);
     map.eachLayer(layer => { if (layer.options && layer.options.radius === 3.5 && layer.options.color === "#ff4444") map.removeLayer(layer); });
-    currentRoutePoints.forEach(p => L.circleMarker(p, { radius: 3.5, color: "#ff4444", fillColor: "#ff6666", fillOpacity: 0.85, weight: 1.5 }).addTo(map));
+    currentRoutePoints.forEach(p => L.circleMarker(p, { radius: 3.5, color: "#ff4444", fillColor: "#ff6666", fillOpacity: 0.85 }).addTo(map));
     currentSmoothCoords = smoothLine(currentRoutePoints, 25);
     currentPolyline = L.polyline(currentSmoothCoords, { color: "#0f6b8c", weight: 4, opacity: 0.95 }).addTo(map);
-    currentPolyline.bindTooltip(`${vessel.name} • ${vessel.type}`, { sticky: true });
-    const endPoint = currentRoutePoints[currentRoutePoints.length-1];
-    L.circleMarker(endPoint, { radius: 8, color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 1 }).addTo(map);
     if (shipAnimationInterval) clearInterval(shipAnimationInterval);
     ship.setLatLng(currentSmoothCoords[0]);
     let idx = 0;
@@ -771,129 +788,68 @@
     ship.setTooltipContent(`⛴️ ${vessel.name}`);
     map.fitBounds(currentRoutePoints);
   }
-  
-  // Fungsi toggle mode map: Normal (OSM) vs GEBCO Bathymetry
-  function toggleMapMode() {
-    if (isBathymetryMode) {
-      // Beralih ke mode Normal
-      if (gebcoBathymetryLayer) map.removeLayer(gebcoBathymetryLayer);
-      if (!normalTileLayer) {
-        normalTileLayer = L.tileLayer(NORMAL_TILE_URL, { maxZoom: 19, attribution: '' });
-      }
-      normalTileLayer.addTo(map);
-      currentBaseLayer = normalTileLayer;
-      isBathymetryMode = false;
-      document.getElementById('toggleBtnText').innerText = "Mode Bathymetry";
-      document.getElementById('mapModeText').innerText = "Mode: Peta Normal (OSM)";
-      document.getElementById('indicatorText').innerText = "Mode Normal";
-      document.getElementById('bathyLegend').style.opacity = "0.4";
-      showToastMsg("🔄 Beralih ke Mode Peta Normal");
-    } else {
-      // Beralih ke mode GEBCO Bathymetry
-      if (normalTileLayer) map.removeLayer(normalTileLayer);
-      if (!gebcoBathymetryLayer) {
-        gebcoBathymetryLayer = L.tileLayer(GEBCO_BATHYMETRY_URL, { 
-          maxZoom: 14, 
-          minZoom: 3, 
-          tileSize: 512, 
-          zoomOffset: -1, 
-          detectRetina: true,
-          attribution: '© GEBCO | MapTiler'
-        });
-      }
-      gebcoBathymetryLayer.addTo(map);
-      currentBaseLayer = gebcoBathymetryLayer;
-      isBathymetryMode = true;
-      document.getElementById('toggleBtnText').innerText = "Mode Normal";
-      document.getElementById('mapModeText').innerText = "Mode: GEBCO Bathymetry";
-      document.getElementById('indicatorText').innerText = "GEBCO Bathymetry Aktif";
-      document.getElementById('bathyLegend').style.opacity = "1";
-      showToastMsg("🌊 Beralih ke Mode GEBCO Bathymetry (Data Kedalaman Laut Global)");
-    }
-  }
-  
-  function addDocksAndLegend() {
-    const dock1Points = [[-7.1321,112.6548],[-7.1342,112.6554],[-7.1340,112.6561],[-7.1319,112.6555]];
-    const dock2Points = [[-7.1325,112.6538],[-7.1323,112.6545],[-7.1343,112.6550],[-7.1345,112.6543]];
-    const addDock = (points, name, center, color) => {
-      L.polygon(points, { color: color, weight: 3, fillColor: color, fillOpacity: 0.35 }).addTo(map);
-      L.marker(center, { icon: L.divIcon({ html: '<div style="font-size:26px;">⚓</div>', iconSize: [30,30] }) }).addTo(map).bindPopup(`<b>${name}</b>`);
-    };
-    const getCenter = pts => [pts.reduce((s,p)=>s+p[0],0)/pts.length, pts.reduce((s,p)=>s+p[1],0)/pts.length];
-    addDock(dock1Points, "DOCK 1 • Sea Route Hub", getCenter(dock1Points), "#2c9b77");
-    addDock(dock2Points, "DOCK 2 • Cargo Premier", getCenter(dock2Points), "#2c7da0");
-    L.polyline([getCenter(dock1Points), getCenter(dock2Points)], { color: "#ffaa55", weight: 1.5, dashArray: "5,8" }).addTo(map);
-    const legend = L.control({ position: 'bottomright' });
-    legend.onAdd = () => {
-      const div = L.DomUtil.create('div', 'info');
-      div.style.backgroundColor = 'rgba(8,22,33,0.85)';
-      div.style.color = '#eef4ff';
-      div.style.padding = '6px 12px';
-      div.style.borderRadius = '24px';
-      div.style.fontSize = '10px';
-      div.innerHTML = '<i class="fas fa-anchor"></i> DOCK 1 & 2 | <i class="fas fa-layer-group"></i> GEBCO Bathymetry';
-      return div;
-    };
-    legend.addTo(map);
-  }
-  
+
   function initMap() {
     map = L.map('map', { attributionControl: false }).setView([-6.5, 112.5], 9);
-    // Buat layer GEBCO bathymetry default
-    gebcoBathymetryLayer = L.tileLayer(GEBCO_BATHYMETRY_URL, { 
-      maxZoom: 14, 
-      minZoom: 3, 
-      tileSize: 512, 
-      zoomOffset: -1, 
-      detectRetina: true,
-      attribution: '© GEBCO | MapTiler'
-    });
-    normalTileLayer = L.tileLayer(NORMAL_TILE_URL, { maxZoom: 19, attribution: '' });
-    gebcoBathymetryLayer.addTo(map);
-    currentBaseLayer = gebcoBathymetryLayer;
-    isBathymetryMode = true;
-    
-    const shipIcon = L.divIcon({ html: '<div style="font-size:32px; filter:drop-shadow(2px 2px 3px black);">⛴️</div>', iconSize: [36,36], popupAnchor: [0,-18] });
-    ship = L.marker([0,0], { icon: shipIcon }).addTo(map);
-    
-    addDocksAndLegend();
-    
+    L.tileLayer(BATHYMETRY_TILE_URL, { maxZoom: 14, minZoom: 4, tileSize: 512, zoomOffset: -1 }).addTo(map);
+    const shipIcon = L.divIcon({ html: '<div style="font-size:32px;">⛴️</div>', iconSize: [36, 36], popupAnchor: [0, -18] });
+    ship = L.marker([0, 0], { icon: shipIcon }).addTo(map);
+    const dock1 = [[-7.1321,112.6548],[-7.1342,112.6554],[-7.1340,112.6561],[-7.1319,112.6555]];
+    const dock2 = [[-7.1325,112.6538],[-7.1323,112.6545],[-7.1343,112.6550],[-7.1345,112.6543]];
+    L.polygon(dock1, { color: "#2c9b77", weight: 3, fillOpacity: 0.35 }).addTo(map);
+    L.polygon(dock2, { color: "#2c7da0", weight: 3, fillOpacity: 0.35 }).addTo(map);
     if (vesselsDatabase.length) {
       currentVessel = vesselsDatabase[0];
-      updateVesselCardWithData(currentVessel);
-      updateShipPopup(currentVessel);
-      updateRouteForVessel(currentVessel);
+      updateVesselCard(currentVessel);
+      updateRoute(currentVessel);
+      ship.bindPopup(`<b>${currentVessel.name}</b><br>${currentVessel.type}`);
     }
   }
-  
-  function searchVessels(q) { if(!q.trim()) return []; const l=q.toLowerCase(); return vesselsDatabase.filter(v=> v.name.toLowerCase().includes(l) || (v.length && v.length.toString().includes(l)) || (v.draft && v.draft.toString().includes(l))); }
-  function renderResults(results) {
-    const container = document.getElementById('searchResults');
-    if(!results.length){ container.innerHTML='<div class="no-result">Kapal tidak ditemukan</div>'; container.classList.add('show'); return; }
-    container.innerHTML = results.map(v=>`<div class="result-item" data-mmsi="${v.mmsi}"><div class="result-name"><i class="fas fa-ship"></i> ${v.name}</div><div class="result-details"><span>${v.length}m</span><span>Draft:${v.draft? v.draft+'m':'N/A'}</span><span>${v.type}</span></div></div>`).join('');
-    container.classList.add('show');
-    document.querySelectorAll('.result-item').forEach(el=>el.addEventListener('click',()=>{ const v=vesselsDatabase.find(v=>v.mmsi===parseInt(el.dataset.mmsi)); if(v){ currentVessel=v; updateVesselCardWithData(v); updateShipPopup(v); updateRouteForVessel(v); showToastMsg(`✅ ${v.name} dimuat`); document.getElementById('searchInput').value=''; container.classList.remove('show'); document.getElementById('searchClear').style.display='none'; } }));
+
+  function setupInteractions() {
+    const searchInput = document.getElementById('searchInput'), clearBtn = document.getElementById('searchClear'), resultsDiv = document.getElementById('searchResults');
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.trim();
+      if (q) {
+        clearBtn.style.display = 'block';
+        const filtered = vesselsDatabase.filter(v => v.name.toLowerCase().includes(q.toLowerCase()) || (v.length && v.length.toString().includes(q)));
+        if (filtered.length) {
+          resultsDiv.innerHTML = filtered.map(v => `<div class="result-item" data-mmsi="${v.mmsi}"><div class="result-name"><i class="fas fa-ship"></i> ${v.name}</div><div class="result-details"><span>${v.length}m</span><span>Draft: ${v.draft || 'N/A'}m</span></div></div>`).join('');
+          resultsDiv.classList.add('show');
+          document.querySelectorAll('.result-item').forEach(el => {
+            el.addEventListener('click', () => {
+              const vessel = vesselsDatabase.find(v => v.mmsi === parseInt(el.dataset.mmsi));
+              if (vessel) { currentVessel = vessel; updateVesselCard(vessel); updateRoute(vessel); showToastMsg(`✅ Kapal ${vessel.name} dipilih`); searchInput.value = ''; resultsDiv.classList.remove('show'); clearBtn.style.display = 'none'; }
+            });
+          });
+        } else { resultsDiv.innerHTML = '<div class="no-result">Kapal tidak ditemukan</div>'; resultsDiv.classList.add('show'); }
+      } else { clearBtn.style.display = 'none'; resultsDiv.classList.remove('show'); }
+    });
+    clearBtn.addEventListener('click', () => { searchInput.value = ''; clearBtn.style.display = 'none'; resultsDiv.classList.remove('show'); searchInput.focus(); });
+    document.addEventListener('click', (e) => { if (!document.querySelector('.search-container').contains(e.target)) resultsDiv.classList.remove('show'); });
+    
+    const menuToggle = document.getElementById('menuToggle'), navMenu = document.getElementById('navMenu'), overlay = document.getElementById('menuOverlay');
+    const closeMenu = () => { navMenu.classList.remove('active'); if(overlay) overlay.classList.remove('active'); const ic = menuToggle.querySelector('i'); ic.classList.add('fa-bars'); ic.classList.remove('fa-times'); };
+    const openMenu = () => { navMenu.classList.add('active'); if(overlay) overlay.classList.add('active'); const ic = menuToggle.querySelector('i'); ic.classList.remove('fa-bars'); ic.classList.add('fa-times'); };
+    menuToggle.addEventListener('click', (e) => { e.stopPropagation(); if(navMenu.classList.contains('active')) closeMenu(); else openMenu(); });
+    if(overlay) overlay.addEventListener('click', closeMenu);
+    document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(btn => btn.addEventListener('click', () => { if (window.innerWidth <= 768) closeMenu(); }));
+    
+    document.getElementById('homeLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-6.5,112.5],9); });
+    document.getElementById('trackLink').addEventListener('click', (e) => { e.preventDefault(); if(currentRoutePoints.length) map.fitBounds(currentRoutePoints); });
+    document.getElementById('portsLink').addEventListener('click', (e) => { e.preventDefault(); map.setView([-7.13,112.655],15); });
+    const exportPng = async () => { showToastMsg("Memproses gambar..."); const canvas = await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true }); const link = document.createElement('a'); link.download = 'sea_route.png'; link.href = canvas.toDataURL(); link.click(); showToastMsg("✅ PNG berhasil"); };
+    const exportPdf = async () => { showToastMsg("Menyusun PDF..."); const canvas = await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' }); const pdfWidth = pdf.internal.pageSize.getWidth(); const imgHeight = (canvas.height * pdfWidth) / canvas.width; pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight); pdf.save('sea_route_report.pdf'); showToastMsg("📄 PDF sukses"); };
+    document.getElementById('exportPngNav').addEventListener('click', exportPng);
+    document.getElementById('exportPdfNav').addEventListener('click', exportPdf);
   }
-  function showToastMsg(msg) { const t=document.createElement('div'); t.className='export-toast'; t.innerHTML=`<i class="fas fa-info-circle"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),300); },2000); }
-  async function captureMapOnly() { return await html2canvas(document.getElementById('exportContainer'), { scale: 3, useCORS: true, backgroundColor: '#eef5fa' }); }
-  
-  async function initializeApp() {
+
+  (async () => {
     await loadExternalData();
     initMap();
-    const searchInput = document.getElementById('searchInput'), searchClear = document.getElementById('searchClear'), searchContainer = document.querySelector('.search-container');
-    searchInput.addEventListener('input', (e) => { const q=e.target.value; if(q.trim()){ searchClear.style.display='block'; renderResults(searchVessels(q)); } else { searchClear.style.display='none'; document.getElementById('searchResults').classList.remove('show'); } });
-    searchClear.addEventListener('click', () => { searchInput.value=''; searchClear.style.display='none'; document.getElementById('searchResults').classList.remove('show'); searchInput.focus(); });
-    document.addEventListener('click', (e) => { if(!searchContainer.contains(e.target)) document.getElementById('searchResults').classList.remove('show'); });
-    const menuToggle = document.getElementById('menuToggle'), navMenu = document.getElementById('navMenu');
-    menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); const icon=menuToggle.querySelector('i'); icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); });
-    document.querySelectorAll('.nav-menu a').forEach(link=>link.addEventListener('click',(e)=>{ if(window.innerWidth<=768){ navMenu.classList.remove('active'); menuToggle.querySelector('i').classList.add('fa-bars'); menuToggle.querySelector('i').classList.remove('fa-times'); } if(link.id==='homeLink'){ e.preventDefault(); map.setView([-6.5,112.5],9); } else if(link.id==='trackLink'){ e.preventDefault(); if(currentRoutePoints.length) map.fitBounds(currentRoutePoints); } else if(link.id==='portsLink'){ e.preventDefault(); map.setView([-7.13,112.655],15); } }));
-    document.getElementById('toggleMapModeBtn').addEventListener('click', toggleMapMode);
-    document.getElementById('exportPngNav').addEventListener('click', async () => { showToastMsg("Memproses PNG..."); try{ const canvas=await captureMapOnly(); const link=document.createElement('a'); link.download='sea_route_gebco.png'; link.href=canvas.toDataURL('image/png'); link.click(); showToastMsg("✅ PNG berhasil"); } catch(e){ showToastMsg("❌ Gagal PNG"); } });
-    document.getElementById('exportPdfNav').addEventListener('click', async () => { showToastMsg("Membuat PDF..."); try{ const canvas=await captureMapOnly(); const imgData=canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf=new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' }); const w=pdf.internal.pageSize.getWidth(); const h=(canvas.height*w)/canvas.width; pdf.addImage(imgData,'PNG',0,0,w,h,undefined,'FAST'); pdf.save('sea_route_gebco_report.pdf'); showToastMsg("📄 PDF sukses"); } catch(e){ showToastMsg("⚠️ Gagal PDF"); } });
-    window.addEventListener('resize', () => { if(window.innerWidth>768 && navMenu.classList.contains('active')){ navMenu.classList.remove('active'); menuToggle.querySelector('i').classList.add('fa-bars'); menuToggle.querySelector('i').classList.remove('fa-times'); } setTimeout(()=>map.invalidateSize(),150); });
-    setTimeout(()=>{ if(ship) ship.openPopup(); setTimeout(()=>map.closePopup(),4000); },1200);
-  }
-  initializeApp();
+    setupInteractions();
+    setTimeout(() => map.invalidateSize(), 200);
+  })();
 </script>
 </body>
 </html>
