@@ -3,71 +3,62 @@ import torch.nn as nn
 import torch.optim as optim
 import json
 import numpy as np
-from safetensors.torch import save_file
+from safetensors.torch import save_file  # Import tambahan untuk ekstensi safetensor
 
-# 1. Load Data
-try:
-    with open('waypoint.json', 'r') as f:
-        data = json.load(f)
-except FileNotFoundError:
-    print("Error: File 'waypoint.json' tidak ditemukan!")
-    exit()
+# 1. di dalam baris kode ini system akan mengambil data dari json
+with open('waypoint.json', 'r') as f:
+    data = json.load(f)
 
-path_coordinates = [[point["lat"], point["lng"]] for point in data["waypoints"]]
+path_coordinates = []
+for point in data["waypoints"]:
+    path_coordinates.append([point["lat"], point["lng"]])
+
 coords = torch.tensor(path_coordinates, dtype=torch.float32)
 
-# 2. Normalisasi (Penting: Simpan nilai min/max untuk inferensi nanti)
+# 2. di dalam bari code ini kode akan menormalisasi data yang dibutuhkan termasuk rules atau data yang tertulis
 coords_min = coords.min(dim=0)[0]
 coords_max = coords.max(dim=0)[0]
-# Hindari pembagian dengan nol jika data statis
-coords_scaled = (coords - coords_min) / (coords_max - coords_min + 1e-8)
+coords_scaled = (coords - coords_min) / (coords_max - coords_min)
 
 inputs = coords_scaled[:-1]
 targets = coords_scaled[1:]
 
-# 3. Arsitektur Model: MLP (Multi-Layer Perceptron)
+
+# 3. di kode ini Arsitektur Model kita menggunakan: MLP (Multi-Layer Perceptron) yang ditingkatkan dengan lstm
 class RoutePredictor(nn.Module):
-    def __init__(self):
-        super(RoutePredictor, self).__init__()
-        self.network = nn.Sequential(
-            nn.Linear(2, 128),
-            nn.ReLU(),
-            nn.BatchNorm1d(128), # Menambah stabilitas training
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, 2)
-        )
-    
-    def forward(self, x):
-        return self.network(x)
+    def __init__(self):
+        super(RoutePredictor, self).__init__()
+        self.layer = nn.Sequential(
+            nn.Linear(2, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, 2)
+        )
+    def forward(self, x):
+        return self.layer(x)
 
 model = RoutePredictor()
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.005) # LR sedikit dikecilkan agar tidak jumping
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-# 4. Training Loop
-print(f"Memulai training dengan {len(inputs)} pasangan titik...")
-model.train()
-
+# 4. dikode ini data akan ditraining sesuai aristektur mengguunakan MSELoss (Mean Squared Error),dan Adam Optimizer  
+print(f"Memulai training dengan {len(coords)} titik dari waypoint.json...")
 for epoch in range(1000):
-    optimizer.zero_grad()
-    outputs = model(inputs)
-    loss = criterion(outputs, targets)
-    loss.backward()
-    optimizer.step()
-    
-    if (epoch + 1) % 100 == 0:
-        print(f'Epoch [{epoch+1}/1000], Loss: {loss.item():.8f}')
+    optimizer.zero_grad()
+    outputs = model(inputs)
+    loss = criterion(outputs, targets)
+    loss.backward()
+    optimizer.step()
+    
+    if (epoch + 1) % 100 == 0:
+        print(f'Epoch [{epoch+1}/1000], Loss: {loss.item():.6f}')
 
 print("Training selesai!")
 
-# 5. Simpan Model & Metadata
-# Safetensors hanya menyimpan tensor. Kita perlu simpan min/max agar bisa dipakai saat prediksi.
+# 5. dikode ini hasil akan disimpan dalam sistem safetensor
+# Kita ambil bobot model (state_dict) lalu simpan
 weights = model.state_dict()
-# Tambahkan nilai normalisasi ke dalam file agar aplikasi lain tahu cara scaling-nya
-weights_to_save = {k: v for k, v in weights.items()}
-weights_to_save["coords_min"] = coords_min
-weights_to_save["coords_max"] = coords_max
+save_file(weights, "model_rute.safetensors")
 
-save_file(weights_to_save, "model_rute.safetensors")
-print("Model dan Metadata normalisasi disimpan ke 'model_rute.safetensors'")
+print("Model telah disimpan dalam format biner: 'model_rute.safetensors'")
