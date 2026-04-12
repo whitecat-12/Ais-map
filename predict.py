@@ -1,93 +1,77 @@
 import torch
 import torch.nn as nn
+import torch.optim as optim
 import json
+import numpy as np
 import os
-from safetensors.torch import load_file
+from safetensors.torch import save_file
 
-# 1. Arsitektur Model (Tetap sama agar cocok dengan file .safetensors)
+# 1. Loading Data dengan proteksi jika file tidak ada
+if not os.path.exists('waypoint.json'):
+    print("Error: File 'waypoint.json' tidak ditemukan!")
+    # Contoh data dummy agar kode tetap jalan untuk tes
+    data = {"waypoints": [{"lat": -6.2, "lng": 106.8}, {"lat": -6.21, "lng": 106.81}]}
+else:
+    with open('waypoint.json', 'r') as f:
+        data = json.load(f)
+
+path_coordinates = [[point["lat"], point["lng"]] for point in data["waypoints"]]
+coords = torch.tensor(path_coordinates, dtype=torch.float32)
+
+# 2. Normalisasi (Ditambah epsilon 1e-8 agar tidak pembagian nol)
+coords_min = coords.min(dim=0, keepdim=True)[0]
+coords_max = coords.max(dim=0, keepdim=True)[0]
+# Epsilon mencegah error jika coords_max == coords_min
+coords_scaled = (coords - coords_min) / (coords_max - coords_min + 1e-8)
+
+# Input: titik sekarang, Target: titik berikutnya
+# Untuk LSTM, kita butuh dimensi: (Sequence, Batch, Feature)
+inputs = coords_scaled[:-1].unsqueeze(1) 
+targets = coords_scaled[1:].unsqueeze(1)
+
+# 3. Arsitektur Model: Hybrid MLP + LSTM
 class RoutePredictor(nn.Module):
     def __init__(self):
         super(RoutePredictor, self).__init__()
-        self.layer = nn.Sequential(
-            nn.Linear(2, 64),
-            nn.ReLU(),
-            nn.Linear(64, 64),
-            nn.ReLU(),
-            nn.Linear(64, 2)
-        )
+        # Menggunakan LSTM agar benar-benar "mengingat" urutan rute
+        self.lstm = nn.LSTM(input_size=2, hidden_size=64, num_layers=2, batch_first=False)
+        self.fc = nn.Linear(64, 2) # Output layer kembali ke koordinat lat/lng
+        
     def forward(self, x):
-        return self.layer(x)
+        # x shape: (seq_len, batch, input_size)
+        out, _ = self.lstm(x)
+        out = self.fc(out)
+        return out
 
-# 2. Persiapan Awal & Memuat Data
-print("--- Memuat Model AI & Konfigurasi... ---")
 model = RoutePredictor()
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-try:
-    # Memuat bobot model
-    weights = load_file("model_rute.safetensors")
-    model.load_state_dict(weights)
-    model.eval() # Mode prediksi (bukan training)
-    
-    # Memuat file JSON untuk referensi normalisasi (Min-Max)
-    with open('waypoint.json', 'r') as f:
-        data = json.load(f)
-    
-    coords = torch.tensor([[p["lat"], p["lng"]] for p in data["waypoints"]], dtype=torch.float32)
-    coords_min = coords.min(dim=0)[0]
-    coords_max = coords.max(dim=0)[0]
-    print("Sistem Siap! Model dan data referensi berhasil dimuat.\n")
+# 4. Training Loop
+print(f"Memulai training dengan {len(coords)} titik...")
+model.train()
 
-except Exception as e:
-    print(f"ERROR: Pastikan file 'model_rute.safetensors' dan 'waypoint.json' ada di folder ini.")
-    print(f"Detail Error: {e}")
-    exit()
-
-# 3. Loop Prediksi Beruntun (10 Titik)
-print("Ketik 'exit' untuk keluar.")
-while True:
-    input_user = input("\nMasukkan Koordinat Awal (lat, lng) - Contoh: -6.1, 106.8: ")
+for epoch in range(1000):
+    optimizer.zero_grad()
+    outputs = model(inputs)
+    loss = criterion(outputs, targets)
     
-    if input_user.lower() == 'exit':
-        print("Program ditutup.")
+    # Cek jika loss NaN (biasanya karena data input rusak)
+    if torch.isnan(loss):
+        print(f"Training terhenti di epoch {epoch} karena Loss NaN!")
         break
+        
+    loss.backward()
+    optimizer.step()
     
-    try:
-        # Parsing input user
-        lat_str, lng_str = input_user.split(',')
-        curr_lat = float(lat_str.strip())
-        curr_lng = float(lng_str.strip())
+    if (epoch + 1) % 100 == 0:
+        print(f'Epoch [{epoch+1}/1000], Loss: {loss.item():.6f}')
 
-        print(f"\n[ AI MENGHASILKAN 10 TITIK RUTE BERIKUTNYA ]")
-        print(f"{'No':<5} | {'Latitude':<12} | {'Longitude':<12}")
-        print("-" * 35)
+print("Training selesai!")
 
-        # Loop untuk menghasilkan 10 titik secara runtut
-        for i in range(1, 11):
-            # A. Normalisasi input saat ini
-            input_coord = torch.tensor([curr_lat, curr_lng], dtype=torch.float32)
-            input_scaled = (input_coord - coords_min) / (coords_max - coords_min)
-            
-            # B. Jalankan Prediksi
-            with torch.no_grad():
-                prediction_scaled = model(input_scaled)
-            
-            # C. Denormalisasi (Kembalikan ke angka koordinat asli)
-            hasil = prediction_scaled * (coords_max - coords_min) + coords_min
-            
-            next_lat = hasil[0].item()
-            next_lng = hasil[1].item()
-            
-            # D. Tampilkan hasil titik ke-i
-            print(f"{i:<5} | {next_lat:<12.6f} | {next_lng:<12.6f}")
-            
-            # E. PENTING: Titik yang dihasilkan sekarang menjadi input untuk titik selanjutnya
-            curr_lat = next_lat
-            curr_lng = next_lng
+# 5. Simpan ke Safetensors
+model.eval()
+weights = model.state_dict()
+save_file(weights, "model_rute.safetensors")
 
-        print("-" * 35)
-        print("Selesai generate rute.")
-
-    except ValueError:
-        print("Format salah! Masukkan angka lat dan lng dipisah koma.")
-    except Exception as e:
-        print(f"Terjadi kesalahan teknis: {e}")
+print("Model telah disimpan: 'model_rute.safetensors'")
